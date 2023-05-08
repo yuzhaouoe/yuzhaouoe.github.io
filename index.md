@@ -2,9 +2,10 @@
 layout: single
 classes: wide
 author_profile: true
+title: 'Home'
 # toc: true
 ---
-# Home
+
 
 ## 🔬 PhD
 
