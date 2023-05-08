@@ -11,7 +11,7 @@ author_profile: true
 
 - I enjoy doing research on Deep Learning and working with people both from the academic and industrial world. [Simone Scardapane](https://www.sscardapane.it) is my advisor.
 
-- Currently studying Dynamic and Modular Neural Networks in Deep Learning. Fan of Python programming 🧑‍💻🐍!
+- I like programming deep learning models in Python 🧑‍💻🐍
 
 
 
