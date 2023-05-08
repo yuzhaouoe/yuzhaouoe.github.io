@@ -13,7 +13,7 @@ author_profile: true
 
 - I like programming deep learning models in Python 🧑‍💻🐍
 
-
+- Currently working on modular neural networks and Continual learning
 
 ## 🤔 What else?
 
