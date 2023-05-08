@@ -5,8 +5,6 @@ author_profile: true
 # toc: true
 ---
 
-# Home 
-
 ## 🔬 PhD
 
 - I enjoy doing research on Deep Learning and working with people both from the academic and industrial world. [Simone Scardapane](https://www.sscardapane.it) is my advisor.
