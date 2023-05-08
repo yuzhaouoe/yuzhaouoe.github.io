@@ -1,0 +1,8 @@
+# main links
+main:
+  #- title: "Utilia"
+  #  url:  /archive
+  - title: "Projects & Activities"
+    url:  /activities
+  - title: "CV & Publications"
+    url: /cv
