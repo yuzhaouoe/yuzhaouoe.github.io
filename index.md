@@ -21,7 +21,7 @@ seo_title: "Alessio Devoto's PhD personal website"
 
 - 🏋 Training to become an [International Coaching Federation](https://coachingfederation.org)-certified life & business coach. 
 
-- 💬 I like languages (even [dead](https://www.sssscomic.com/comicpages/196.jpg) ones!).
+- 💬 I like languages (even [dead ones!](https://www.sssscomic.com/comicpages/196.jpg)).
 
 - 👨‍🏫️ I teach Ancient Greek & Latin, Maths to high school and college students.
 
