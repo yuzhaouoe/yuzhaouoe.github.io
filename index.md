@@ -3,7 +3,8 @@ layout: single
 classes: wide
 author_profile: true
 title: 'Home'
-excerpt: 'Alessio Devoto personal website'
+excerpt: "Alessio Devoto's PhD personal website"
+seo_title: "Alessio Devoto's PhD personal website"
 # toc: true
 ---
 
@@ -14,7 +15,7 @@ excerpt: 'Alessio Devoto personal website'
 
 - I like programming deep learning models in Python 🧑‍💻🐍
 
-- Currently working on modular neural networks and Continual learning
+- [PhD](https://phd.uniroma1.it/web/ALESSIO-DEVOTO_nP1701081_IT.aspx) in modular neural networks and Continual learning
 
 ## 🤔 What else?
 
