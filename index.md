@@ -3,6 +3,7 @@ layout: single
 classes: wide
 author_profile: true
 title: 'Home'
+excerpt: 'Alessio Devoto personal website'
 # toc: true
 ---
 
