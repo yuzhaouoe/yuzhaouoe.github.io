@@ -4,7 +4,7 @@ classes: wide
 author_profile: true
 title: 'Home'
 excerpt: "Alessio Devoto's PhD personal website"
-seo_title: "Alessio Devoto's PhD personal website"
+seo_title: "Alessio Devoto's personal blog"
 # toc: true
 ---
 
