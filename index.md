@@ -8,8 +8,6 @@ seo_title: "Alessio Devoto's personal blog"
 # toc: true
 ---
 
-<meta name="google-site-verification" content="dDLCziuVpFsoWUVXwVC9VDkoCSYjI89nDe59V2KFn-g" />
-
 ## 🔬 PhD
 
 - I enjoy doing research on Deep Learning and working with people both from the academic and industrial world. [Simone Scardapane](https://www.sscardapane.it) is my advisor.
