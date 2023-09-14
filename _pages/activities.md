@@ -1,6 +1,7 @@
 ---
 permalink: /activities/
 title: "Recent and past activities"
+seo_title: "Alessio Devoto activities"
 # excerpt: "Things I have been doing lately."
 # last_modified_at: 2022-05-27T11:59:26-04:00
 # toc: true

@@ -1,5 +1,6 @@
 ---
 title: "Curricum vitae"
+seo_title: "Alessio Devoto's personal CV"
 permalink: /cv/
 layout: single
 author_profile: true
