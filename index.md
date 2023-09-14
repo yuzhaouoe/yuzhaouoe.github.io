@@ -8,6 +8,7 @@ seo_title: "Alessio Devoto's personal blog"
 # toc: true
 ---
 
+<meta name="google-site-verification" content="dDLCziuVpFsoWUVXwVC9VDkoCSYjI89nDe59V2KFn-g" />
 
 ## 🔬 PhD
 
