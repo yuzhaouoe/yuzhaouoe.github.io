@@ -1,8 +1,8 @@
 # main links
 main:
-  - title: "Utilia"
-    url:  /archive
-  - title: "Activities"
+  - title: "Projects & Activities"
     url:  /activities
   - title: "CV & Publications"
     url: /cv
+  - title: "Tutorials"
+    url:  /archive
