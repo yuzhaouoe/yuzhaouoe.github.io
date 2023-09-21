@@ -2,7 +2,7 @@
 main:
   - title: "Utilia"
     url:  /archive
-  - title: "Projects & Activities"
+  - title: "Activities"
     url:  /activities
   - title: "CV & Publications"
     url: /cv
