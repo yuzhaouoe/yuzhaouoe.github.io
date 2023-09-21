@@ -202,7 +202,7 @@ markdown_ext: "markdown,mkdown,mkdn,mkd,md"
 markdown: kramdown
 highlighter: rouge
 lsi: false
-excerpt_separator: <!--more--> #"\n\n"
+excerpt_separator: <!--excerpt_end--> #"\n\n"
 incremental: false
 
 
