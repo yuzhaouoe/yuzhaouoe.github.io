@@ -300,6 +300,7 @@ defaults:
       related: true
       show_date: true
 
+
 # Defaults for pages
 defaults:
   # _pages
