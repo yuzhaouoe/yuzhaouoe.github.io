@@ -1,4 +1,6 @@
-
+---
+layout:single
+---
 
 # Machine Learning demos with Gradio
 
