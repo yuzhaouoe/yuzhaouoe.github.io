@@ -4,7 +4,7 @@ seo_title: "Alessio Devoto's personal CV"
 permalink: /cv/
 layout: single
 author_profile: true
-toc: true
+toc: false
 ---
 
 
@@ -52,7 +52,7 @@ Liceo Classico Tito Lucrezio Caro, Rome. Final Mark: 100/100  *[2011 - 2016]*
 - Italian: Native 
 - English: C2
 - Spanish: C1
-- Portuguese: A1 & learning  
+- Portuguese: B2 & learning  
 
 
 ## Publications
