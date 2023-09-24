@@ -1,5 +1,5 @@
 ---
-title: A primer on Explainability for sGraph Neural Networks
+title: A primer on Explainability for Graph Neural Networks
 seo_title: Using Captum, TracIn and Integrated Gradients for attribution on Graph Neural Networks with pytorch geometric
 ---
 
