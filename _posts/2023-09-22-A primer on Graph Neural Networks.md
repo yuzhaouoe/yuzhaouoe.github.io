@@ -1,8 +1,7 @@
 ---
-title: A primer on Graph Neural Networks
-seo_title: 'Training a Graph Convolutional Network on the MUTAG dataset for graph classification'
+title: A primer on Explainability for sGraph Neural Networks
+seo_title: 'Using Captum, TracIn and Integrated Gradients for attribution on Graph Neural Networks'
 ---
-Training a Graph Convolutional Network on the MUTAG dataset for graph classification
 
 <html>
 <head><meta charset="utf-8" />
