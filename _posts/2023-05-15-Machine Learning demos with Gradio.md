@@ -1,17 +1,10 @@
 ---
 title: " Machine Learning demos with Gradio"
 layout: single
-# last_modified_at: 2016-03-09T16:20:02-05:00
+tags:
+    - tutorials
 ---
-
-
-**In this tutorial we will cover**:
-
-- Deployment of apps based on ML or DL models
-
-
-**Author**:
-- Alessio Devoto (alessio.devoto@uniroma1.it)
+In this tutorial we will cover the deployment of apps based on ML or DL models.
 
 
 **Duration**: 50 mins
