@@ -1,7 +1,7 @@
 ---
 permalink: /tutorials/
-title: "Some tutorials about various topics"
-seo_title: "Alessio Devoto tutorial colab notebooks"
+title: "Entropy"
+seo_title: "Alessio Devoto's blog"
 layout: posts_no_date
 author_profile: true
 toc: true
