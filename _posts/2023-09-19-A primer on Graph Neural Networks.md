@@ -703,7 +703,7 @@ plt.plot([x.detach().item() for x in eval_accs])
 
 
     
-![png]({{vbase_url }}A%20primer%20on%20Graph%20Neural%20Networks_files/A%20primer%20on%20Graph%20Neural%20Networks_17_1.png)
+![png]({{base_url}}A%20primer%20on%20Graph%20Neural%20Networks_files/A%20primer%20on%20Graph%20Neural%20Networks_17_1.png)
     
 
 
