@@ -1,4 +1,7 @@
-<!DOCTYPE html>
+---
+title: A primer
+---
+
 <html>
 <head><meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -866,6 +869,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 | The full license is in the file LICENSE, distributed with this software.
 |----------------------------------------------------------------------------*/
 
+@charset "UTF-8";
 /*!
 
 Copyright 2015-present Palantir Technologies, Inc. All rights reserved.
