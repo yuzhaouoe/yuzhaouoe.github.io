@@ -4,6 +4,7 @@ seo_title: This Colab notebook shows how to deal with outliers in Machine Learni
 tags:
     - notebook
     - colab
+toc: true
 ---
 # Outliers and how to deal with them
 
