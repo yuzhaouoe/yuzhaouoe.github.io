@@ -5,16 +5,13 @@ tags:
     - notebook
     - colab
 ---
+# Outliers and how to deal with them
 
 This Colab notebook shows how to deal with outliers in Machine Learning tasks. **Duration**: 30 mins
 
-
-## Sales prediction
-
-- Your company collected a dataset containing information about investments in commercials via TV, Radio and Newspapers. Given the amount of money invested in different advertisement media (TV, Radio, Newspaper) predict sales.
+Your company collected a dataset containing information about investments in commercials via TV, Radio and Newspapers. Given the amount of money invested in different advertisement media (TV, Radio, Newspaper) predict sales.
 
 In this notebook we are going to meet **outliers** 😦 for the first time!
-
 
 What are we going to do? 🤔
 
