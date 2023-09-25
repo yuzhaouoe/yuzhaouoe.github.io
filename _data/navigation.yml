@@ -4,5 +4,5 @@ main:
     url:  /activities
   - title: "CV & Publications"
     url: /cv
-  - title: "Tutorials"
-    url:  /tutorials
+  - title: "Entropy"
+    url:  /blog

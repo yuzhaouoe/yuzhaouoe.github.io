@@ -14,8 +14,6 @@ seo_title: "Alessio Devoto's personal blog"
 
 - I like programming deep learning models in Python 🧑‍💻🐍
 
-- [PhD](https://phd.uniroma1.it/web/ALESSIO-DEVOTO_nP1701081_IT.aspx) in modular neural networks and Continual learning
-
 ## 🤔 What else?
 
 - 🏋 Training to become an [International Coaching Federation](https://coachingfederation.org)-certified life & business coach. 
