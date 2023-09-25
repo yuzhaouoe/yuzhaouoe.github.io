@@ -4,7 +4,6 @@ layout: single
 tags:
     - tutorials
 ---
-In this tutorial we will cover the deployment of apps based on ML or DL models.
 
 
 **Duration**: 50 mins
