@@ -4,7 +4,7 @@ seo_title: Colab Notebook training a simple Graph convolutional network for grap
 ---
 # A primer on Graph Neural Networks with Pytorch Geometric
 
-In this Colab Notebook we show how to train a simple Graph Neural Netwoel on the MUTAG dataset. 
+In this Colab Notebook we show how to train a simple Graph Neural Network on the MUTAG dataset. 
 
 
 The MUTAG dataset contains molecules, represented as graphs. Each node is an atom, and each edge is a bond between atoms.
