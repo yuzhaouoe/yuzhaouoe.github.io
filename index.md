@@ -10,7 +10,7 @@ seo_title: "Alessio Devoto's personal blog"
 
 ## 🔬 PhD
 
-- I enjoy doing research on Deep Learning and working with people both from the academic and industrial world. [Simone Scardapane](https://www.sscardapane.it) is my advisor.
+- I enjoy doing research on Deep Learning and working with people both from the [academic](https://phd.uniroma1.it/web/ALESSIO-DEVOTO_nP1701081_IT.aspx) and industrial world. [Simone Scardapane](https://www.sscardapane.it) is my advisor.
 
 - I like coding deep learning models in Python 🧑‍💻🐍
 
