@@ -4,7 +4,7 @@ seo_title: "Alessio Devoto's personal CV"
 permalink: /cv/
 layout: single
 author_profile: true
-toc: false
+toc: true
 ---
 
 
