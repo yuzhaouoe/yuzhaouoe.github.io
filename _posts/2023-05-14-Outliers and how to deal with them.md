@@ -8,7 +8,6 @@ tags:
     - colab
 
 ---
-# Outliers and how to deal with them
 This Colab notebook shows how to deal with outliers in Machine Learning tasks. 
 
 
@@ -32,7 +31,7 @@ But wait... what actually is an outlier?
 From Wikipedia: *in statistics, an outlier is a data point that differs significantly from other observations.*
 
 
-For a better experience: 
+For a better experience, open in Colab: 
 <a href="https://colab.research.google.com/github/alessiodevoto/notebooks/blob/main/deepcamp_lab2.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
 
 
