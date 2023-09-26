@@ -1,7 +1,7 @@
 ---
 layout: single
 author_profile: true
-title: A primer on Graph Neural Networks with Pytorch Geometric
+title: Explainability for Graphs with Pytorch Geometric and Captum
 seo_title: Colab Notebook training a simple Graph convolutional network for graph classification on Mutag dataset with pytorch geometric.
 
 tags:
