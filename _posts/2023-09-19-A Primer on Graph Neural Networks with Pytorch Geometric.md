@@ -3,6 +3,13 @@ layout: single
 author_profile: true
 title: A primer on Graph Neural Networks with Pytorch Geometric
 seo_title: Colab Notebook training a simple Graph convolutional network for graph classification on Mutag dataset with pytorch geometric.
+
+tags:
+    - notebook
+    - tutorial
+    - pytorch
+    - graphs
+    - pytorch geometric
 ---
 In this Colab Notebook we show how to train a simple Graph Neural Network on the MUTAG dataset. 
 

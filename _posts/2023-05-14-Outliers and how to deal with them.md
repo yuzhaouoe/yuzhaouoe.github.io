@@ -4,8 +4,10 @@ author_profile: true
 title: Outliers and how to deal with them
 seo_title: This Colab notebook shows how to deal with outliers in Machine Learning tasks.
 tags:
-    - notebook
-    - colab
+	- notebook
+	- tutorial
+	- pandas
+	- colab
 
 ---
 This Colab notebook shows how to deal with outliers in Machine Learning tasks. 
