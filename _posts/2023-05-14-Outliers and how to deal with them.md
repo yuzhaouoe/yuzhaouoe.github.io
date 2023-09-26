@@ -3,17 +3,15 @@ layout: single
 author_profile: true
 title: Outliers and how to deal with them
 seo_title: This Colab notebook shows how to deal with outliers in Machine Learning tasks.
+
 tags:
 	- notebook
 	- tutorial
 	- pandas
 	- colab
-
 ---
 This Colab notebook shows how to deal with outliers in Machine Learning tasks. 
 
-
-**Duration**: 30 mins
 
 Your company collected a dataset containing information about investments in commercials via TV, Radio and Newspapers. Given the amount of money invested in different advertisement media (TV, Radio, Newspaper) predict sales.
 
