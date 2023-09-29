@@ -3,8 +3,8 @@ layout: single
 classes: wide
 author_profile: true
 title: 'Home'
-excerpt: "Alessio Devoto's PhD personal website"
-seo_title: "Alessio Devoto's, La Sapienza PhD, personal website."
+excerpt: "Alessio Devoto's personal website"
+seo_title: "Alessio Devoto, La Sapienza Roma, personal website."
 # toc: true
 ---
 
