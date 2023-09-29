@@ -233,6 +233,7 @@ timezone: Europe/Rome # https://en.wikipedia.org/wiki/List_of_tz_database_time_z
 
 # Plugins (previously gems:)
 plugins:
+  - jekyll-remote-theme
   - jekyll-paginate
   - jekyll-sitemap
   - jekyll-gist
