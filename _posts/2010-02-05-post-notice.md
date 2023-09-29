@@ -1,4 +1,5 @@
 ---
+layout: single
 title: "Post: Notice"
 categories:
   - Blog
