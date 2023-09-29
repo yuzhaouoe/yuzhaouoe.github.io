@@ -1,8 +1,8 @@
 ---
 layout: single
 author_profile: true
-title: A primer on Graph Neural Networks with Pytorch Geometric
-seo_title: Colab Notebook training a simple Graph convolutional network for graph classification on Mutag dataset with pytorch geometric.
+title: Explainability for Graphs with Pytorch Geometric and Captum
+seo_title: Colab Notebook training a simple Graph convolutional network and using Captum, TracIn and integrated gradients for explainability.
 
 tags:
     - notebook
@@ -19,4 +19,6 @@ The MUTAG dataset contains molecules, represented as graphs. Each node is an ato
 
 We will use Pytorch Geometric for the manipulation of the graph data structures and the design of the Graph Neural Network. We will use Captum and GNNExplainer for graph interpretability.
 
-For a better experience, open in Colab: <a href="https://colab.research.google.com/github/alessiodevoto/notebooks/blob/main/A_Primer_on_Explainability_for_GNNs_(Liverpool).ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a> {: .notice--warning}
+**For a better experience, open in Colab**:
+[![open in colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/alessiodevoto/notebooks/blob/main/A_Primer_on_Explainability_for_GNNs_(Liverpool).ipynb)
+{: .notice--warning}
