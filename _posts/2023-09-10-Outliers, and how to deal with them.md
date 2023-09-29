@@ -1,14 +1,15 @@
 ---
 layout: single
 author_profile: true
-title: Outliers and how to deal with them
-seo_title: This Colab notebook shows how to deal with outliers in Machine Learning tasks.
+title: Outliers, and how to deal with them
+seo_title: Colab Notebook showing how to treat outliers in simple machine learning tasks
 
 tags:
-	- notebook
-	- tutorial
-	- pandas
-	- colab
+    - notebook
+    - tutorial
+    - pytorch
+    - graphs
+    - pytorch geometric
 ---
 This Colab notebook shows how to deal with outliers in Machine Learning tasks. 
 
@@ -24,12 +25,13 @@ What are we going to do? 🤔
 3. Treat outliers
 4. Check performance degradation due to outliers
 
-But wait... what actually is an outlier?
+But wait... what actually is an outlier? 
 
 ![image](https://raw.githubusercontent.com/alessiodevoto/deepers/main/images/outliers_example.jpg)
 
 From Wikipedia: *in statistics, an outlier is a data point that differs significantly from other observations.*
 
+**For a better experience, open in Colab**:
+[![open in colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/alessiodevoto/notebooks/blob/main/deepcamp_lab2.ipynb)
+{: .notice--warning}
 
-For a better experience, open in Colab: 
-<a href="https://colab.research.google.com/github/alessiodevoto/notebooks/blob/main/deepcamp_lab2.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>

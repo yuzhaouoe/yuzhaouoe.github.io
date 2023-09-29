@@ -20,5 +20,5 @@ The MUTAG dataset contains molecules, represented as graphs. Each node is an ato
 We will use Pytorch Geometric for the manipulation of the graph data structures and the design of the Graph Neural Network. We will use Captum and GNNExplainer for graph interpretability.
 
 **For a better experience, open in Colab**:
-[![open in colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/alessiodevoto/notebooks/blob/main/A_Primer_on_Explainability_for_GNNs_(Liverpool).ipynb)
+[![open in colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/alessiodevoto/gnns_xai_liverpool/blob/main/notebooks/A_Primer_on_Explainability_for_GNNs_(Liverpool).ipynb)
 {: .notice--warning}

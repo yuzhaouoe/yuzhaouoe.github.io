@@ -1,10 +1,10 @@
 ---
 permalink: /activities/
 title: "Recent and past activities"
-seo_title: "Alessio Devoto activities"
+seo_title: "Alessio Devoto activities and projects"
 # excerpt: "Things I have been doing lately."
 # last_modified_at: 2022-05-27T11:59:26-04:00
-# toc: true
+toc: true
 ---
 
 - **High energy physics and graph neural networks** <br> Studying applications of Graph Neural Networks to high energy physics, as a part of the [MUCCA project](https://mucca-project.github.io/) in collaboration with the University of Liverpool.
