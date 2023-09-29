@@ -106,8 +106,7 @@ analytics:
 author:
   name             : #"Alessio Devoto, PhD"
   avatar           : "/assets/images/alessio_pp_standard.jpg"
-  bio              : "🤖 Computer Engineer <br> <br>  
-                      PhD candidate in Data Science at La Sapienza, Rome <br> <br>
+  bio              : "🤖 Computer Engineer and PhD candidate in Data Science at La Sapienza <br> <br>
                       <a href='https://classicalanthology.theclassicslibrary.com/2012/05/30/odyssey-1-1-6/'> 📖 Ἄνδρα μοι ἔννεπε, Μοῦσα, πολύτροπον <a>" 
   location         : "Rome, Italy <br>"
   email            : 
