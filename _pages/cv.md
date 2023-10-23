@@ -19,6 +19,9 @@ toc: true
 - **ICF trainee Coach.** Studying and training to become a life & business coach.  Experience with 30+ hours as individual coach. 
 <br>  *[February 2020 - Present]*
 
+- **Teaching Assistant.** Teaching assistant for the course of Neural Networks, taught in the Master's course in Data Science at Sapienza, University of Rome.
+<br>  *[October 2023]*
+
 
 ## Education
 - **PhD in Data Science** 
