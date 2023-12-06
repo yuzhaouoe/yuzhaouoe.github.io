@@ -49,7 +49,7 @@ $$
 
 The more a probability distribution is balanced, that is, all events are similarly likely, the higher is the entropy. The more unbalanced the distribution, the lower the entropy. Look at the chart from [1] that plots entropy for a probability distribution with only two events.
 
-<img src="https://machinelearningmastery.com/wp-content/uploads/2019/10/Plot-of-Probability-Distribution-vs-Entropy.png" width="40%"/>
+<img src="https://machinelearningmastery.com/wp-content/uploads/2019/10/Plot-of-Probability-Distribution-vs-Entropy.png" width="50%"/>
 
 ### Cross entropy
 
