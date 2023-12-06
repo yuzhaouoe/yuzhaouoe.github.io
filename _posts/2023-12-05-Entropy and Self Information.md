@@ -9,6 +9,8 @@ tags:
 
 published: true
 ---
+This post contains exceptionally short notes on entropy and self information and why they matter in machine learning.
+
 
 <script type="text/javascript" async
   src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
