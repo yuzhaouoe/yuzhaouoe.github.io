@@ -22,7 +22,7 @@ In order to deal with information from a *quantitive* and not *qualitative* pers
 
 The breakthrough idea of Shannon follows from the intuition that the more unlikely an event is, the higher its information - and vice versa. 
 
-Assuming a set of possible events $X = {x_0, x_1, ... x_n}$ with a corresponding probability distribution such that each $x_i$ has a probability of $p(x_i)$, we want to derive a quantity, which we shall define information content of $x_i$ or $h(x_i)$ such that the higher $p(x_i)$ the lower $h(x_i)$. We define 
+Assuming a set of possible events $ X = {x_0, x_1, ... x_n} $ with a corresponding probability distribution such that each $x_i$ has a probability of $p(x_i)$, we want to derive a quantity, which we shall define information content of $$x_i$$ or $$h(x_i)$$ such that the higher $p(x_i)$ the lower $h(x_i)$. We define 
 
 $$
 h(x_i) = log(\frac{1}{p(x_i)}) = -log(p(x_i))
