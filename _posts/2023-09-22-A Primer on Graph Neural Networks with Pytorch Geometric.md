@@ -10,6 +10,8 @@ tags:
     - pytorch
     - graphs
     - pytorch geometric
+
+published: true
 ---
 In this Colab Notebook we show how to train a simple Graph Neural Network on the MUTAG dataset. 
 

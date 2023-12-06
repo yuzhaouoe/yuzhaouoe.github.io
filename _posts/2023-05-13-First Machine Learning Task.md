@@ -8,6 +8,8 @@ tags:
 	- tutorial
 	- pandas
 	- colab
+
+published: true
 ---
 In this short tutorial, we will use our company's dataset to predict whether a customer will churn or not.
 

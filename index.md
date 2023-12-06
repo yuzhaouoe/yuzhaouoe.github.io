@@ -10,9 +10,10 @@ seo_title: "Alessio Devoto, La Sapienza Roma, personal website."
 
 ## 🔬 PhD
 
-- I enjoy doing research on Deep Learning and working with people both from the [academic](https://phd.uniroma1.it/web/ALESSIO-DEVOTO_nP1701081_IT.aspx) and industrial world. [Simone Scardapane](https://www.sscardapane.it) is my advisor.
+- PhD student in Data Science at Sapienza, University of Rome. [Simone Scardapane](https://www.sscardapane.it) is my advisor.
 
-- I like coding deep learning models in Python 🧑‍💻🐍
+- I enjoy doing research on Deep Learning and working with people both from the [academic](https://phd.uniroma1.it/web/ALESSIO-DEVOTO_nP1701081_IT.aspx) and industrial world. 
+
 
 ## 🤔 What else?
 

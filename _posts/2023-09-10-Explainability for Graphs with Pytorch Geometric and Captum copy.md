@@ -10,6 +10,8 @@ tags:
     - pytorch
     - graphs
     - pytorch geometric
+
+published: true
 ---
 In this Colab Notebook we show how to use explainability methods on Graph Neural Networks.
 
