@@ -10,6 +10,9 @@ tags:
 published: true
 ---
 
+<script type="text/javascript" async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
 
 Information theory is a science concerned with the study of quantification of information. 
 
