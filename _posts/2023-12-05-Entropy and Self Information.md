@@ -11,6 +11,7 @@ published: true
 ---
 This post contains short notes on entropy and self information and why machine learning adopted them from information theory.
 
+
 <script type="text/javascript" async
   src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
 </script>
