@@ -13,7 +13,7 @@ tags:
     
 published: true
 ---
-This Colab notebook shows how to deal with outliers in Machine Learning tasks. 
+An introductory Colab notebook showing how to deal with outliers in simple Machine Learning tasks. 
 
 
 Your company collected a dataset containing information about investments in commercials via TV, Radio and Newspapers. Given the amount of money invested in different advertisement media (TV, Radio, Newspaper) predict sales.
