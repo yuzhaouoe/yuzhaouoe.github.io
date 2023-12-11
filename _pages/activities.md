@@ -16,3 +16,4 @@ toc: true
 - **Energy grids** <br> I worked with [**ENEL**](https://www.enel.it), Italy's largest energy supplier, and developed a model for object re-identification used to re-identify electrical lines. 
 
 
+

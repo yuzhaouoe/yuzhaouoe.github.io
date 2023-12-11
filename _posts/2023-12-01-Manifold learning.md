@@ -17,7 +17,7 @@ A manifold is a [topological space](https://en.wikipedia.org/wiki/Topological_sp
 
 A manifold is essentially a generalization of Euclidean space such that locally (small areas) are approximately the same as a Euclidean space, but the entire space fails to have the same properties of Euclidean space when observed in its entirety. 
 
-![A two-dimensional manifold](https://scikit-learn.org/stable/_images/sphx_glr_plot_compare_methods_001.png)
+![](https://scikit-learn.org/stable/_images/sphx_glr_plot_compare_methods_001.png)
 *A two-dimensional manifold is any 2-D shape that can be made to fit in a higher-dimensional space by twisting or bending it, loosely speaking*
 
 ### Manifold hypothesis

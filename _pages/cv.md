@@ -20,7 +20,7 @@ toc: true
 <br>  *[February 2020 - Present]*
 
 - **Teaching Assistant.** Teaching assistant for the course of Neural Networks, taught in the Master's course in Data Science at Sapienza, University of Rome.
-<br>  *[October 2023]*
+<br>  *[September 2023 - present]*
 
 
 ## Education
