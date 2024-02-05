@@ -16,5 +16,5 @@ toc: true
 - **Energy grids** <br> I worked with [**ENEL**](https://www.enel.it), Italy's largest energy supplier, and developed a model for object re-identification used to re-identify electrical lines. 
 
 
-- **6G-GOALS** <br> Funded by the European Union, we use Machine Learning and Artificial Intelligence for goal and semantic oriented communications.
+- **6G-GOALS** <br> Funded by the European Union, we use Machine Learning and Artificial Intelligence for Goal and Semantic oriented communications.
 
