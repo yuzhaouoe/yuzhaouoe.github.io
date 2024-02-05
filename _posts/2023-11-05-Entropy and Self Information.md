@@ -20,7 +20,7 @@ Information theory is a science concerned with the study of quantification of i
 
 ### Self information
 
-In order to deal with information from a *quantitive* and not *qualitative* perspective, [Claude Shannon](https://it.wikipedia.org/wiki/Claude_Shannon) invented a formula to quantify how much information was contained inside an event. 
+In order to deal with information from a *quantitive* and not *qualitative* perspective, [Claude Shannon](https://it.wikipedia.org/wiki/Claude_Shannon) invented a formula to quantify how much information is contained inside an event. 
 
 The breakthrough idea of Shannon follows from the intuition that the more unlikely an event is, the higher its information - and vice versa. 
 
