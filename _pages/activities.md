@@ -1,6 +1,6 @@
 ---
 permalink: /activities/
-title: "Recent and past activities"
+title: "Activities & Projects"
 seo_title: "Alessio Devoto activities and projects"
 # excerpt: "Things I have been doing lately."
 # last_modified_at: 2022-05-27T11:59:26-04:00
@@ -16,4 +16,5 @@ toc: true
 - **Energy grids** <br> I worked with [**ENEL**](https://www.enel.it), Italy's largest energy supplier, and developed a model for object re-identification used to re-identify electrical lines. 
 
 
+- **6G-GOALS** <br> Funded by the European Union, we use Machine Learning and Artificial Intelligence for goal and semantic oriented communications.
 
