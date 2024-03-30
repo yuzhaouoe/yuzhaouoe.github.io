@@ -98,6 +98,7 @@ Here we report the performance compared to other strong baselines.
   </tr>
 </table>
 
+You can find further details about this work [here](https://scholar.google.com/citations?view_op=view_citation&hl=it&user=er31rp0AAAAJ&citation_for_view=er31rp0AAAAJ:d1gkVwhDpl0C)
 
 ### Reference
 1. G. Aguilar, Y. Ling, Y. Zhang, B. Yao, X. Fan, and C. Guo. Knowledge distillation from internal representations. In Proceedings of the
