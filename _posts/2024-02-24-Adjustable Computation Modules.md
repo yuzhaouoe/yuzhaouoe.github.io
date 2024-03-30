@@ -1,8 +1,8 @@
 ---
 layout: single
 author_profile: true
-title: Manifold learning
-seo_title: Simple short exaplanation of manifold learning in machine learning. 
+title: Adjustable Computation Modules
+seo_title: A blog post for the paper Adjustable Computation Modules 
 
 tags:
     - theory
