@@ -67,3 +67,5 @@ Liceo Classico Tito Lucrezio Caro, Rome. Final Mark: 100/100  *[2011 - 2016]*
 - [Cascaded Scaling Classifier: class incremental learning with probability scaling - Arxiv preprint](https://arxiv.org/pdf/2402.01262.pdf), 2023
 
 - [Adaptive Computation Modules: Granular Conditional Computation For Efficient Inference -  Arxiv preprint](https://arxiv.org/pdf/2312.10193.pdf), 2023
+
+- [Conditional computation in neural networks: principles and research trends - Arxiv preprint](https://arxiv.org/abs/2403.07965), 2024
