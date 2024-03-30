@@ -4,7 +4,7 @@ title: "Projects & Activities"
 seo_title: "Alessio Devoto activities and projects"
 # excerpt: "Things I have been doing lately."
 # last_modified_at: 2022-05-27T11:59:26-04:00
-toc: true
+toc: false
 ---
 - **6G-GOALS** <br> Funded by the European Union, we use Machine Learning and Artificial Intelligence for Goal and Semantic oriented communications. See [here](https://arxiv.org/abs/2402.07573) for more info.
 
