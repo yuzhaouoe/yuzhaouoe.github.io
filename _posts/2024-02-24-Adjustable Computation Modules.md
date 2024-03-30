@@ -11,6 +11,13 @@ published: true
 ---
 This brief post summarizes a project I have been working on over the past months. 
 
+
+<script type="text/javascript" async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+
 ### We need faster transformers 
 
 The computational cost of transformer models makes them inefficient in low-latency or low-power applications. Techniques such as quantization, distillation, sparsification, or linear attention can reduce the computational load, they may incur a reduction in accuracy. 
