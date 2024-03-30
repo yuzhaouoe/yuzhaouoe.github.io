@@ -121,7 +121,7 @@ author:
       icon: "fab fa-fw fa-linkedin" 
       url: "https://www.linkedin.com/in/alessio-devoto/"
     - label: "Scholar"
-      icon: "fas fa-fw fa-magnifying-glass">
+      icon: "fas fa-fw fa-magnifying-glass"
       url: "https://scholar.google.com/citations?user=er31rp0AAAAJ&hl"
     #- label: "Twitter"
       #icon: "fab fa-fw fa-twitter-square"
