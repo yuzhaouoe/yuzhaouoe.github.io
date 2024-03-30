@@ -87,15 +87,16 @@ Here we report the performance compared to other strong baselines.
     </td>
     <td>
         <b>Speech recognition</b> 
-  </tr>
-  <tr>
+    </td>
+</tr>
+<tr>
     <td style="width:49%">
       <img src="../assets/images/acms/cost_vs_accuracy_cv.png" >
     </td>
     <td style="width:49%">
       <img src="../assets/images/acms/cost_vs_accuracy_stt.png" >
     </td>
-  </tr>
+</tr>
 </table>
 
 You can find further details about this work [here](https://scholar.google.com/citations?view_op=view_citation&hl=it&user=er31rp0AAAAJ&citation_for_view=er31rp0AAAAJ:d1gkVwhDpl0C)
