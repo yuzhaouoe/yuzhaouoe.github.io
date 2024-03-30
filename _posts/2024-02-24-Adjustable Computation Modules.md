@@ -9,7 +9,7 @@ tags:
 
 published: true
 ---
-This brief post summarizes a project I have been working on over the past months. 
+This brief post summarizes a project I have been working on over the past months. ou can find further details about this work [here](https://scholar.google.com/citations?view_op=view_citation&hl=it&user=er31rp0AAAAJ&citation_for_view=er31rp0AAAAJ:d1gkVwhDpl0C)
 
 
 <script type="text/javascript" async
@@ -35,7 +35,9 @@ An ACM consists of a sequence of *learners* that progressively refine the output
 </div>
 
 Given an input token $z$, an ACM is composed of a set of $N$ homogeneous modules, $$ s_n(z; \phi_{(n)}) $$ , $$ n \in \{1, ..., N\} $$, each module having weights $$ \phi_{(n)} $$. We refer to these modules as *learners*. The output of the ACM block is: 
-$$ h(z, k; \phi) = \sum_{n=1}^k s_n(z; \phi_{(n)}) $$ 
+$$ 
+h(z, k; \phi) = \sum_{n=1}^k s_n(z; \phi_{(n)}) 
+$$ 
 
 A gating network selects $$ k $$, i.e. **how many learners to activate**, using Gumbel-Softmax trick. 
 
