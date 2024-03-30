@@ -1,5 +1,5 @@
 ---
-title: "Curricum vitae"
+title: "Curriculum vitae"
 seo_title: "Alessio Devoto's personal CV"
 permalink: /cv/
 layout: single
