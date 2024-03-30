@@ -1,8 +1,8 @@
 ---
 layout: single
 author_profile: true
-title: Adjustable Computation Modules
-seo_title: A blog post for the paper Adjustable Computation Modules 
+title: Adaptive Computation Modules
+seo_title: A blog post for the paper Adaptive Computation Modules 
 
 tags:
     - theory
@@ -27,10 +27,10 @@ An ACM consists of a sequence of *learners* that progressively refine the output
     <img src="../assets/images/acms/acm_arch.png"  width="500" >
 </div>
 
-Given an input token $z$, an ACM is composed of a set of $N$ homogeneous modules, $s_n(z; \phi_{(n)})$, $n \in \{1, ..., N\}$, each module having weights $\phi_{(n)}$. We refer to these modules as *learners*. The output of the ACM block is: 
+Given an input token $z$, an ACM is composed of a set of $N$ homogeneous modules, $$ s_n(z; \phi_{(n)}) $$ , $$ n \in \{1, ..., N\} $$, each module having weights $$ \phi_{(n)} $$. We refer to these modules as *learners*. The output of the ACM block is: 
 $$ h(z, k; \phi) = \sum_{n=1}^k s_n(z; \phi_{(n)}) $$ 
 
-A gating network selects $k$, i.e. **how many learners to activate**, using Gumbel-Softmax trick. 
+A gating network selects $$ k $$, i.e. **how many learners to activate**, using Gumbel-Softmax trick. 
 
 ### Training
 
