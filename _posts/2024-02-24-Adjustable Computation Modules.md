@@ -34,7 +34,8 @@ An ACM consists of a sequence of *learners* that progressively refine the output
     <img src="../assets/images/acms/acm_arch.png"  width="500" >
 </div>
 
-Given an input token $z$, an ACM is composed of a set of $N$ homogeneous modules, $$ s_n(z; \phi_{(n)}) $$ , $$ n \in \{1, ..., N\} $$, each module having weights $$ \phi_{(n)} $$. We refer to these modules as *learners*. The output of the ACM block is: 
+Given an input token $$ z $$, an ACM is composed of a set of $N$ homogeneous modules, $$ s_n(z; \phi_{(n)}) $$ , $$ n \in \{1, ..., N\} $$, each module having weights $$ \phi_{(n)} $$. We refer to these modules as *learners*. The output of the ACM block is: 
+
 $$ 
 h(z, k; \phi) = \sum_{n=1}^k s_n(z; \phi_{(n)}) 
 $$ 
