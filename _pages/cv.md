@@ -59,13 +59,16 @@ Liceo Classico Tito Lucrezio Caro, Rome. Final Mark: 100/100  *[2011 - 2016]*
 
 
 ## Publications
+- [Adaptive Computation Modules: Granular Conditional Computation For Efficient Inference](https://arxiv.org/pdf/2312.10193.pdf), 2023
 
-- [Re-identification of objects from aerial photos with hybrid siamese neural networks - IEEE Transactions on Industrial Informatics](https://ieeexplore.ieee.org/document/9802679), 2023 
+- [Conditional computation in neural networks: principles and research trends](https://arxiv.org/abs/2403.07965), 2024
 
-- [On the robustness of vision transformers for in-flight monocular depth estimation - Industrial Artificial Intelligence](https://link.springer.com/article/10.1007/s44244-023-00005-3), 2023
+- [Adaptive Semantic Token Selection for AI-native Goal-oriented Communications](https://arxiv.org/abs/2405.02330), 2024
 
-- [Cascaded Scaling Classifier: class incremental learning with probability scaling - Arxiv preprint](https://arxiv.org/pdf/2402.01262.pdf), 2023
+- [Re-identification of objects from aerial photos with hybrid siamese neural networks](https://ieeexplore.ieee.org/document/9802679), 2023 
 
-- [Adaptive Computation Modules: Granular Conditional Computation For Efficient Inference -  Arxiv preprint](https://arxiv.org/pdf/2312.10193.pdf), 2023
+- [On the robustness of vision transformers for in-flight monocular depth estimation](https://link.springer.com/article/10.1007/s44244-023-00005-3), 2023
 
-- [Conditional computation in neural networks: principles and research trends - Arxiv preprint](https://arxiv.org/abs/2403.07965), 2024
+- [Cascaded Scaling Classifier: class incremental learning with probability scaling](https://arxiv.org/pdf/2402.01262.pdf), 2023
+
+
