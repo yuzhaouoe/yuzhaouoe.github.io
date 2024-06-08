@@ -59,6 +59,8 @@ Liceo Classico Tito Lucrezio Caro, Rome. Final Mark: 100/100  *[2011 - 2016]*
 
 
 ## Publications
+- [Are We Done With MMLU?](https://arxiv.org/abs/2406.04127), 2024
+
 - [Adaptive Computation Modules: Granular Conditional Computation For Efficient Inference](https://arxiv.org/pdf/2312.10193.pdf), 2023
 
 - [Conditional computation in neural networks: principles and research trends](https://arxiv.org/abs/2403.07965), 2024
