@@ -9,7 +9,7 @@ tags:
 
 published: true
 ---
-This brief post summarizes a project I have been working on over the past months. ou can find further details about this work [here](https://scholar.google.com/citations?view_op=view_citation&hl=it&user=er31rp0AAAAJ&citation_for_view=er31rp0AAAAJ:d1gkVwhDpl0C)
+This brief post summarizes a project I have been working on over the past months. You can find further details about this work [here](https://scholar.google.com/citations?view_op=view_citation&hl=it&user=er31rp0AAAAJ&citation_for_view=er31rp0AAAAJ:d1gkVwhDpl0C)
 
 
 <script type="text/javascript" async
