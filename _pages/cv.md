@@ -8,6 +8,12 @@ toc: true
 ---
 
 
+<script type="text/javascript" async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+
 ## Experience
 
 - **Research Fellow at ISPAMM Lab Sapienza.** Researcher in the field of machine learning and deep learning, with a focus on Natural Language Processing and Graph Neural Networks. 
@@ -59,6 +65,8 @@ Liceo Classico Tito Lucrezio Caro, Rome. Final Mark: 100/100  *[2011 - 2016]*
 
 
 ## Publications
+- [A Simple and Effective $L_2$ norm-based strategy for KV cache compression](https://arxiv.org/abs/2406.11430)
+
 - [Are We Done With MMLU?](https://arxiv.org/abs/2406.04127), 2024
 
 - [Adaptive Computation Modules: Granular Conditional Computation For Efficient Inference](https://arxiv.org/pdf/2312.10193.pdf), 2023
