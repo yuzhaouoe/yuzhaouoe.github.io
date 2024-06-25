@@ -16,7 +16,7 @@ seo_description:  Alessio Devoto is a PhD student in Data Science at La Sapienza
 
 - PhD student in Data Science at Sapienza, University of Rome. [Simone Scardapane](https://www.sscardapane.it) is my advisor. 
 
-- I enjoy doing research on Deep Learning and working with people both from the [academic](https://phd.uniroma1.it/web/ALESSIO-DEVOTO_nP1701081_IT.aspx) and industrial world. 
+- I enjoy doing research on Machine Learning and working with people both from the [academic](https://phd.uniroma1.it/web/ALESSIO-DEVOTO_nP1701081_IT.aspx) and industrial world. 
 
 
 ## 🤔 What else?
