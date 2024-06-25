@@ -111,6 +111,9 @@ author:
   location         : "Rome, Italy <br>"
   email            : 
   links:
+    - label: "X"
+      icon: "fab fa-fw fa-square-x-twitter" 
+      url: "https://x.com/devoto_alessio"
     - label: "Email"
       icon: "fas fa-fw fa-envelope-square"
       url: "mailto:devoto.alessio@gmail.com"
@@ -121,11 +124,9 @@ author:
       icon: "fab fa-fw fa-linkedin" 
       url: "https://www.linkedin.com/in/alessio-devoto/"
     - label: "Scholar"
-      # icon: "fas fa-fw fa-magnifying-glass"
+      icon: "fas fa-fw fa-book"
       url: "https://scholar.google.com/citations?user=er31rp0AAAAJ&hl"
-    - label: "X"
-      icon: "fab fa-fw fa-square-x-twitter" 
-      url: "https://x.com/devoto_alessio"
+
     #- label: "Facebook"
       #icon: "fab fa-fw fa-facebook-square"
       # url: "https://facebook.com/"
