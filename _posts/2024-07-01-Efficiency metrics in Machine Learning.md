@@ -17,6 +17,10 @@ For instance, latency and throughput are critical for evaluating how well a mode
 
 In this short post, I will recap the most important metrics used to measure efficiency of models and highlight their differences.
 
+<div style="text-align: center;">
+    <img src="../assets/images/efficiency/post_efficiency.png"  width="500" >
+</div>
+
 
 <script type="text/javascript" async
   src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
