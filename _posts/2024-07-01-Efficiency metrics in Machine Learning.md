@@ -24,14 +24,14 @@ In this short post, I will recap the most important metrics used to measure effi
 ### Parameters size
 The number of parameters in a model refers to the total count of learnable weights. A higher number of parameters can lead to a more powerful model capable of capturing complex patterns. However, it also demands more memory, which can make training and deployment challenging. In the past recent years, large language models (LLMs) have become extremely popular. LLMs can contain huge number of parameters, often running into billions. 
 
-Here we provide a simple table containing the number of parameters in most popular neural network layers, assuming we have an input with $ c_i $ channels, and an output with $ c_o $ channels. For convolutions, we denote the height and width of the kernel with $ k_h, k_w $ respectively.
+Here we provide a simple table containing the number of parameters in most popular neural network layers, assuming we have an input with $$ c_i $$ channels, and an output with $$ c_o $$ channels. For convolutions, we denote the height and width of the kernel with $$ k_h, k_w $$ respectively.
 
 | Layer                  | Number of Parameters (bias is ignored)     | Explanation |
 |------------------------|--------------------------------------------| ------------|
-| Linear Layer           | $ c_o \cdot c_i  $                           | simply the number of edges in a fully connected |
-| Convolution            | $ c_o \cdot c_i \cdot k_h \cdot k_w  $       | for each input channel we have a kernel $ k_h \times k_w \times c_o $ |
-| Grouped Convolution    | $ \frac{c_o}{g} \cdot \frac{c_i}{g} \cdot k_h \cdot k_w \cdot g = c_o \cdot c_i \cdot k_h \cdot k_w / g  $ | we group convolutions into $ g $ groups |
-| Attention Block        | $ 3 \cdot c_i \cdot c_o + c_o \cdot c_o  $ | we first project into $ QKV $ and then perform output prjection |
+| Linear Layer           | $$ c_o \cdot c_i  $$                           | simply the number of edges in a fully connected |
+| Convolution            | $$ c_o \cdot c_i \cdot k_h \cdot k_w  $$       | for each input channel we have a kernel $$ k_h \times k_w \times c_o $$ |
+| Grouped Convolution    | $$ \frac{c_o}{g} \cdot \frac{c_i}{g} \cdot k_h \cdot k_w \cdot g = c_o \cdot c_i \cdot k_h \cdot k_w / g  $$ | we group convolutions into $$ g $$ groups |
+| Attention Block        | $$ 3 \cdot c_i \cdot c_o + c_o \cdot c_o  $$ | we first project into $$ QKV $$ and then perform output prjection |
 
 
 It is important to point out that the number of parameters does not coincide with the actual memory required to store the model, as this depends on the [floating point precision](https://engineering.fb.com/2018/11/08/ai-research/floating-point-math/). Floating point precision determines how many bits we use to store each parameter. As a consequence, the final size of the model can be computed as:
@@ -42,7 +42,7 @@ $$
 
 We often try to use as few bits as possible to represent model weights, which is called quantization. Quantization reduces the precision of the model's parameters, typically from 32-bit floating-point to 16-bit or even 8-bit integers, significantly decreasing the memory footprint and computational requirements. 
 
-As an example, the size of `llama3-8b` in standard `fp16` would be roughly $ 8000000000 \times 16 bits \sim 16 \text{GB} $. If we employ `int4` quantization, the size goes down to $ 8000000000 \times 4 bits \sim 4 \text{GB} $ !
+As an example, the size of `llama3-8b` in standard `fp16` would be roughly $$ 8000000000 \times 16 bits \sim 16 \text{GB} $$. If we employ `int4` quantization, the size goes down to $$ 8000000000 \times 4 bits \sim 4 \text{GB} $$ !
 
 The parameters size is independent from the underlying hardware, and impacts the memory during training (we have *parameter efficient fine-tuning* methods to tackle that) and inference (quantization helps a lot here). Additionally, as a general rule, a model with fewer parameters generally requires less compute, so parameters size often indirectly affects computational demands.
 
@@ -54,20 +54,20 @@ $$
 a = a \times b + c 
 $$ 
 
-One MAC requires performing one multiplication and one addition, i.e. two generic Floating Point Operations. Hence, we have that $ FLOPs = 2 \times MACs $.
+One MAC requires performing one multiplication and one addition, i.e. two generic Floating Point Operations. Hence, we have that $$ FLOPs = 2 \times MACs $$.
 
 MACs and FLOPs provide a *hardware-independent* way to estimate the computational cost, allowing comparisons across different models and architectures. Lowering the FLOPs while maintaining model performance is a common goal, as it can lead to faster inference times and lower energy consumption, making the model more suitable for deployment in resource-constrained environments.
 
 However, it's important to note that lower FLOPs do not necessarily translate to lower latency. For example, a model might have fewer FLOPs but require more memory access operations, which can be slower than the arithmetic computations themselves. Conversely, a model with higher FLOPs might be highly optimized for parallel processing, leading to lower latency on specific hardware. Thus, while FLOPs are a valuable metric for assessing computational cost, they should be considered alongside other metrics like latency to get a comprehensive view of a model's efficiency. 
 
-In neural networks we perform *a lot* of [matrix - matrix multiplications](https://pytorch.org/blog/inside-the-matrix/). For a matrix-matrix multiplication between $ A_{m \times n} \times B_{n \times k} $ we need $ nmk $ MACs and $ 2nmk $ FLOPs.  You can use [this tool](https://alessiodevoto.github.io/Compute-Flops-with-Pytorch-built-in-flops-counter/) to count the FLOPs of a model in Pytorch. Let's take a look at the FLOPs required by each of the most common neural networks layers.
+In neural networks we perform *a lot* of [matrix - matrix multiplications](https://pytorch.org/blog/inside-the-matrix/). For a matrix-matrix multiplication between $$ A_{m \times n} \times B_{n \times k} $$ we need $$ nmk $$ MACs and $$ 2nmk $$ FLOPs.  You can use [this tool](https://alessiodevoto.github.io/Compute-Flops-with-Pytorch-built-in-flops-counter/) to count the FLOPs of a model in Pytorch. Let's take a look at the FLOPs required by each of the most common neural networks layers.
 
 | Layer                  | MACs     | Explanation |
 |------------------------|--------------------------------------------| ------------|
-| Linear Layer           | $ c_o \cdot c_i  $                           | vector matrix multiplication |
-| Convolution            | $ c_o \cdot o_w \cdot o_h \cdot c_i \cdot k_h \cdot k_w  $       | for each output pixel, we perform the convolution $ k_h \times k_w \times c_i $ |
-| Grouped Convolution    | $ \frac{c_o}{g} \cdot o_w \cdot o_h \cdot c_i \cdot k_h \cdot k_w  $ | we group convolutions into $ g $ groups |
-| Attention Block        | $ 3 \cdot N \cdot {c_i}^2 + N^2 \dot c_i + N^2 \cdot {c_i}^2  $ | QKV projection + attention computation + output projection |
+| Linear Layer           | $$ c_o \cdot c_i  $$                           | vector matrix multiplication |
+| Convolution            | $$ c_o \cdot o_w \cdot o_h \cdot c_i \cdot k_h \cdot k_w  $$       | for each output pixel, we perform the convolution $$ k_h \times k_w \times c_i $$ |
+| Grouped Convolution    | $$ \frac{c_o}{g} \cdot o_w \cdot o_h \cdot c_i \cdot k_h \cdot k_w  $$ | we group convolutions into $$ g $$ groups |
+| Attention Block        | $$ 3 \cdot N \cdot {c_i}^2 + N^2 \dot c_i + N^2 \cdot {c_i}^2  $$ | QKV projection + attention computation + output projection |
 
 
 FLOPs determine the computational intensity of model, and are the factor that most prominently affects the compute resources. The number of FLOPs that a the specific hardware can perform in a second, i.e. FLOPs per Second, is called FLOPS and measures hardware performance. 
@@ -78,20 +78,20 @@ Latency refers to the **time** it takes for a model to process an input and prod
 
 Latency is highly dependent on three factors: the number of parameters in the model, the FLOPs required by the model, and hardware specific constraints. Because latency is extremely hardware dependent, it is often not a good choice for comparisons. However, it is the most crucial metric for real world applications. 
 
-During inference and training, a typical machine learning data path involves: (1) reading data from memory to the streaming multiprocessors on the GPU core (2) performing the required computations and (3) writing the results back to memory, which can happen asynchronously thanks to the GPU's VRAM supprting async I/O. Hence, we have two possible bottlenecks: the computation that takes place on the GPU cores ($ T_{compute} $), or the memory input/output ($ T_{compute} $). The latency of an operation is therefore determined by the "slowest" of [these two steps](https://docs.nvidia.com/deeplearning/performance/dl-performance-gpu-background/index.html#understand-perf). 
+During inference and training, a typical machine learning data path involves: (1) reading data from memory to the streaming multiprocessors on the GPU core (2) performing the required computations and (3) writing the results back to memory, which can happen asynchronously thanks to the GPU's VRAM supprting async I/O. Hence, we have two possible bottlenecks: the computation that takes place on the GPU cores ($$ T_{compute} $$), or the memory input/output ($$ T_{compute} $$). The latency of an operation is therefore determined by the "slowest" of [these two steps](https://docs.nvidia.com/deeplearning/performance/dl-performance-gpu-background/index.html#understand-perf). 
 
 $$
 \text{latency} = \max(T_{memory}, T_{compute})
 $$
 
-If $ T_{memory} > T_{compute} $ we say the operation is memory-bound, else we say it is compute-bound. How to find out $T_{memory}$ and $T_{compute}$ for a specific neural network layer?  $T_{compute}$ is simply the amount of time the cuda cores need to perform the computations required. Assuming our layer performs a given amount of FLOPs, and the GPU can perform at most Floating Point Operations per Second, we have that 
+If $$ T_{memory} > T_{compute} $$ we say the operation is memory-bound, else we say it is compute-bound. How to find out $$T_{memory}$$ and $$T_{compute}$$ for a specific neural network layer?  $$T_{compute}$$ is simply the amount of time the cuda cores need to perform the computations required. Assuming our layer performs a given amount of FLOPs, and the GPU can perform at most Floating Point Operations per Second, we have that 
 
 $$
 T_{compute} = \frac{layer FLOPs}{GPU FLOPS}
 $$
 
 Notice that the maximum GPU FLOPs depend on the precision we are operating at, so FLOPs at `fp16` are not the same as FLOPs at `int8`.
-The  $T_{compute}$ is determined by the amount of data we have to move from memory, usually High Bandwidth Memory (HBM) and the memory bandwidth. When executing a layer, we need to read from memory (a) the layer parameters and (b) the input activations. Therefore, we have that 
+The  $$T_{compute}$$ is determined by the amount of data we have to move from memory, usually High Bandwidth Memory (HBM) and the memory bandwidth. When executing a layer, we need to read from memory (a) the layer parameters and (b) the input activations. Therefore, we have that 
 
 $$
 T_{memory} = \frac{\text{size of model parameters} + \text{size of input activations} + \text{size of output activations}}{\text{memory bandwidth}}
