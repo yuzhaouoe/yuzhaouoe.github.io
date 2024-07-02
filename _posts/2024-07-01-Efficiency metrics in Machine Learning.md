@@ -10,7 +10,7 @@ tags:
 
 published: true
 ---
-In the rapidly evolving world of machine learning, *efficiency* is a buzzword we hear all the time. New methods or models often come with the claim of being more efficient than their predecessors. But what does "more efficient" actually mean? Comparing efficiency objectively can be tricky since the metrics used to measure it are often confusing and varied. Some are hardware-dependent, while others are not. Some concern the memory and the compute, while others the power consumption. 
+In the world of machine learning, *efficiency* is a buzzword we hear all the time. New methods or models often come with the claim of being more efficient than their predecessors. But what does "more efficient" actually mean? Comparing efficiency objectively can be tricky since the metrics used to measure it are often confusing and varied. Some are hardware-dependent, while others are not. Some concern the memory and the compute, while others the power consumption. 
 
 For instance, latency and throughput are critical for evaluating how well a model performs in real-time applications during inference. On the other hand, floating-point operations per second (FLOPs) and parameter size are often considered also during the training phase to gauge the computational and memory demands of a model.
 
