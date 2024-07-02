@@ -1,5 +1,6 @@
 ---
 layout: single
+classes: wide
 author_profile: true
 title: Efficiency Metrics in Machine Learning
 seo_title: A blog post to explain what are the most important metrics to measure efficiency, like flops, macs, throughput, latency.
