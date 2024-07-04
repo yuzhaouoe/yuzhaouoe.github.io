@@ -12,7 +12,7 @@ published: true
 ---
 In the world of machine learning, *efficiency* is a buzzword we hear all the time. New methods or models often come with the claim of being more efficient than their predecessors. But what does "more efficient" actually mean? Comparing efficiency objectively can be tricky since the metrics used to measure it are often confusing and varied. Some are hardware-dependent, while others are not. Some concern the memory and the compute, while others the power consumption. 
 
-For instance, latency and throughput are critical for evaluating how well a model performs in real-time applications during inference. On the other hand, floating-point operations per second (FLOPs) and parameter size are often considered also during the training phase to gauge the computational and memory demands of a model.
+For instance, *latency* and *throughput* are critical for evaluating how well a model performs in real-time applications during inference. On the other hand, *floating-point operations per second* (FLOPs) and *parameter size* are often considered during the training phase to gauge the computational and memory demands of a model.
 
 
 In this short post, I will recap the most important metrics used to measure efficiency of models and highlight their differences.
@@ -112,6 +112,16 @@ Additionally, energy is crucial for on-device training, which is necessary for a
 
 In general, VRAM memory access is the most energy consuming operation, requiring 100x more power than accessing SRAM and 200x than performing an ADD operation.
 
+### Peak Activations 
+Peak activations refer to the maximum memory occupied by activations (outputs) produced by neurons in the network during the forward propagation process. At inference time they do not represent a significant bottleneck, because (a) the batch size it typically small and (b) we don't need to store them for backpropagation. During training, the activations represent the most significant bottleneck, because we need to store them for gradient computation to update model weights. 
+
+It is important to point out that only activations of nonlinear layers introduce this problem. Assuming we have a layer $$ \mathbf{a}_{i+1} = \mathbf{W} \mathbf{a}_i $$.
+
+$$
+\frac{\partial \mathcal{L}}{\partial a_i} = \frac{\partial \mathcal{L}}{\partial a_{i+1}} \frac{\partial a_{i+1}}{\partial a_i} = \frac{\partial \mathcal{L}}{\partial a_{i+1}} \mathbf{w_i}^T
+$$
+
+
 
 | Metric                  | explanation               | primarily affects                                | primarily affected by        | hardware independent |
 |------------------------ |---------------- |----------------------------------------|------------------------|--------------|
@@ -127,3 +137,4 @@ In general, VRAM memory access is the most energy consuming operation, requiring
 - [Efficient AI MIT course](https://hanlab.mit.edu/courses/2023-fall-65940)
 - [Arithmetic intensity](https://docs.nvidia.com/deeplearning/performance/dl-performance-gpu-background/index.html#understand-perf)
 - [Floating point precision at Meta](https://engineering.fb.com/2018/11/08/ai-research/floating-point-math/)
+- [On device training for ViT](https://arxiv.org/pdf/2405.10951)
