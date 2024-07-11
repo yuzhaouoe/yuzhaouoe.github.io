@@ -12,14 +12,13 @@ seo_description:  Alessio Devoto is a PhD student in Data Science at La Sapienza
 ---
 
 
-[Researching](https://phd.uniroma1.it/web/ALESSIO-DEVOTO_nP1701081_IT.aspx) Efficient Machine Learning and AI with [Simone Scardapane](https://www.sscardapane.it)
+[Researching](https://phd.uniroma1.it/web/ALESSIO-DEVOTO_nP1701081_IT.aspx) Efficient Machine Learning and AI with [Simone Scardapane](https://www.sscardapane.it) <br> 
 
+Training to become a certified life & business coach at [International Coaching Federation](https://coachingfederation.org). <br>
 
-Training to become a certified life & business coach at [International Coaching Federation](https://coachingfederation.org).
+Erasmus student at [Universidad Politecnica de Valencia](http://www.upv.es/es), Spain. <br>
 
-Erasmus student at [Universidad Politecnica de Valencia](http://www.upv.es/es), Spain.
-
-- 👨‍🏫️  I like languages (even [dead ones!](https://www.sssscomic.com/comicpages/196.jpg)), tutor Ancient Greek, Latin and Maths to high school and college students.
+I like languages (even [dead ones!](https://www.sssscomic.com/comicpages/196.jpg)). I teach Ancient Greek, Latin and Maths to high school and college students. 
 
 
 
