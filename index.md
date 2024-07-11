@@ -11,8 +11,11 @@ seo_description:  Alessio Devoto is a PhD student in Data Science at La Sapienza
 # toc: true
 ---
 
+## PhD
 
-[Researching](https://phd.uniroma1.it/web/ALESSIO-DEVOTO_nP1701081_IT.aspx) Efficient Machine Learning and AI with [Simone Scardapane](https://www.sscardapane.it) <br> 
+[PhD student](https://phd.uniroma1.it/web/ALESSIO-DEVOTO_nP1701081_IT.aspx) candidate in Data Science La Sapienza, University of Rome. Currently researching Efficient Machine Learning and AI with [Simone Scardapane](https://www.sscardapane.it) <br> 
+
+## Also
 
 Training to become a certified life & business coach at [International Coaching Federation](https://coachingfederation.org). <br>
 
