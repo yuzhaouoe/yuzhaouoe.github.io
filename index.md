@@ -14,6 +14,7 @@ seo_description:  Alessio Devoto is a PhD student in Data Science at La Sapienza
 ## PhD
 
 👨‍🎓 [PhD candidate](https://phd.uniroma1.it/web/ALESSIO-DEVOTO_nP1701081_IT.aspx) in Data Science at La Sapienza, University of Rome. <br>
+
 🌱 Currently researching Efficient Machine Learning and AI models with [Simone Scardapane](https://www.sscardapane.it). <br> 
 
 🏴󠁧󠁢󠁳󠁣󠁴󠁿 Visiting Edinburgh NLP research lab.
