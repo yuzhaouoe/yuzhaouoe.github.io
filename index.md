@@ -17,7 +17,7 @@ seo_description:  Alessio Devoto is a PhD student in Data Science at La Sapienza
 
 🌱 Currently researching Efficient Machine Learning and AI models with [Simone Scardapane](https://www.sscardapane.it). <br> 
 
-🏴󠁧󠁢󠁳󠁣󠁴󠁿 Visiting Edinburgh NLP research lab.
+🏴󠁧󠁢󠁳󠁣󠁴󠁿 Visiting Edinburgh NLP research hosted by [Pasquale Minervini](https://neuralnoise.com/).
 
 ## Also
 
