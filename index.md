@@ -2,7 +2,7 @@
 layout: single
 classes: wide
 author_profile: true
-title: 'Alessio Devoto'
+title: ''
 excerpt: "Alessio Devoto's personal website"
 seo_title: "Alessio Devoto PhD, La Sapienza Roma,  personal website."
 excerpt: Alessio Devoto is a PhD student in Data Science at La Sapienza University, Rome.
