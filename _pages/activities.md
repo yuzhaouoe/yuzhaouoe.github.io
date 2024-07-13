@@ -6,10 +6,10 @@ seo_title: "Alessio Devoto activities and projects"
 # last_modified_at: 2022-05-27T11:59:26-04:00
 toc: false
 ---
-- **6G-GOALS** <br> Funded by the European Union, we use Machine Learning and Artificial Intelligence for Goal and Semantic oriented communications. See [here](https://arxiv.org/abs/2402.07573) for more info.
+- **6G-GOALS** <br> Funded by the European Union, we use Machine Learning and Artificial Intelligence for Goal and Semantic oriented communications to develop the next generation of 6G. See [here](https://arxiv.org/abs/2402.07573) for more info.
 
 
-- **High energy physics and graph neural networks** <br> Studying applications of Graph Neural Networks to high energy physics, as a part of the [MUCCA project](https://mucca-project.github.io/) in collaboration with the University of Liverpool.
+- **High energy physics and graph neural networks** <br> Studying applications of Graph Neural Networks to high energy physics, as a part of the [MUCCA project](https://mucca-project.github.io/) in collaboration with the University of Liverpool and CERN.
 
 
 - **Energy grids** <br> I worked with [**ENEL**](https://www.enel.it), Italy's largest energy supplier, and developed a model for object re-identification used to re-identify electrical lines. 
