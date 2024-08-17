@@ -22,14 +22,7 @@ Obviously, all these methods assume you have multiple GPUs at your disposal (sur
 
 > TLDR: Split your dataset across multiple GPUs, each with a full model copy. Synchronize gradients after each pass.
 
-Pros:
-- Simple to implement
-- Scales well with number of devices for smaller models
-- Effective for large datasets
-
-Cons:
-- Communication overhead for gradient synchronization
-- Memory redundancy (full model on each device)
+Data parallelism is simple to implement, and scales well with number of devices for smaller model. It is especially effective for large datasets. On the other hand, it introduces a lot of communication overhead for gradient synchronization. Additionally, because a full copy of the model is stored on each device, it also causes memory redundancy.
 
 Pseudocode:
 ```python
@@ -49,13 +42,7 @@ for batch in dataloader:
 
 > TLDR: Divide your model across devices, each processes the same input at different stages.
 
-Pros:
-- Handles models too large for a single device
-- Reduces memory requirements per device
-
-Cons:
-- Might be complex to implement
-- Potential load imbalance: needs pipeline to avoid GPUs from remaining idle
+Model parallelism is perfect for handling models too large for a single device. In doing so, it also reduces the memory required for a single device. Unfortunately, it might be complex to implement efficiently, because of potential load imbalance: it usually needs pipelining to avoid GPUs from remaining idle.
 
 Pseudocode:
 ```python
@@ -74,15 +61,7 @@ def forward(x):
 
 >TLDR: Split your model into stages on different devices. Data flows through the pipeline, with multiple batches processed simultaneously.
 
-This is the solution to the imbalancing problem for plain model parallel. A nice explanation of model parallel + pipeline parallel can be found [here](https://pytorch.org/tutorials/intermediate/model_parallel_tutorial.html) 
-
-Pros:
-- Balances computation and communication
-- Efficient for deep models
-
-Cons:
-- Complex scheduling -> you have to deal with splitting the input across GPUs. 
-- Potential for "bubble" periods of idle time
+This is the solution to the imbalancing problem for plain model parallel. A nice explanation of model parallel + pipeline parallel can be found [here](https://pytorch.org/tutorials/intermediate/model_parallel_tutorial.html). Pipeline parallel balances computation and communication and makes model parallelism more efficient. As a drawback, it requires a potentially complex scheduling: you have to deal with splitting the input across GPUs and schedule the pipeline. If you do this the wrong way, you might cause "bubble" periods of idle time.
 
 Pseudocode:
 ```python
@@ -107,12 +86,6 @@ def pipeline_forward(batches):
 
 This is somewhat on another level of abstraction wrt to Data and Model parallel, as tensor can represent anything in a deep learning pipeline. In other words, tensor parallel includes model and data parallel. 
 
-Pros:
-- Reduces memory requirements for large tensors
-
-Cons:
-- Requires careful tensor partitioning
-- Increased communication for tensor operations
 
 Pseudocode:
 ```python
@@ -135,7 +108,7 @@ ZeRO includes all types of parallelism. More specifically, it impleemnts three p
 
 Certainly. The ZeRO (Zero Redundancy Optimizer) technique offers three progressive levels of memory optimization. Each level increases memory efficiency but also introduces more communication overhead. ZeRO-3 provides the highest memory efficiency but with the most communication. More specifically:
 
-- ZeRO-1: Optimizer State Partitioning
+- ZeRO-1: Optimizer State Partitioning: 
   - Partitions optimizer states (e.g., momentum buffers) across GPUs
   - Each GPU only stores optimizer states for its portion of parameters
   - Model parameters and gradients are still replicated on all GPUs
@@ -153,15 +126,7 @@ Certainly. The ZeRO (Zero Redundancy Optimizer) technique offers three progressi
   - Requires gathering parameters during forward/backward passes
 
 
-Pros:
-- Memory-efficient, scales to very large models
-- Combines benefits of data and model parallelism
-
-Cons:
-- Increased communication overhead
-- Complexity increases with higher ZeRO levels
-
-Implementation note: ZeRO is typically used through libraries like DeepSpeed or PyTorch's FSDP.
+ZeRO offers the most flexibility by combining benefits of data and model parallelism. Obviously, it introduces increased communication overhead and its complexity increases with higher ZeRO levels. Implementation of ZeRO is typically used through libraries like DeepSpeed or PyTorch's FSDP.
 
 ---
 
