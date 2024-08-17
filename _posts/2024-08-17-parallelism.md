@@ -18,7 +18,7 @@ This is a short, far-from-exahustive list of different types of parallelism that
 
 Obviously, all these methods assume you have multiple GPUs at your disposal (surprise!).
 
-## 1. Data Parallelism
+### 1. Data Parallelism
 
 > TLDR: Split your dataset across multiple GPUs, each with a full model copy. Synchronize gradients after each pass.
 
@@ -45,7 +45,7 @@ for batch in dataloader:
     optimizer.step()
 ```
 
-## 2. Model Parallelism
+### 2. Model Parallelism
 
 > TLDR: Divide your model across devices, each processes the same input at different stages.
 
@@ -70,7 +70,7 @@ def forward(x):
     return model_part2(x)
 ```
 
-## 3. Pipeline Parallelism
+### 3. Pipeline Parallelism
 
 >TLDR: Split your model into stages on different devices. Data flows through the pipeline, with multiple batches processed simultaneously.
 
@@ -101,7 +101,7 @@ def pipeline_forward(batches):
     yield stage2(prev_x)
 ```
 
-## 4. Tensor Parallelism
+### 4. Tensor Parallelism
 
 > TLDR: Partition individual tensors (weights, activations) across devices. Each computes a portion of tensor operations.
 
@@ -127,7 +127,7 @@ class TPLinear(nn.Module):
         return all_gather(local_out)
 ```
 
-## 5. ZeRO (Zero Redundancy Optimizer)
+### 5. ZeRO (Zero Redundancy Optimizer)
 
 > TLDR: Shards model parameters, gradients, and optimizer states across devices.
 
@@ -140,20 +140,17 @@ Certainly. The ZeRO (Zero Redundancy Optimizer) technique offers three progressi
   - Each GPU only stores optimizer states for its portion of parameters
   - Model parameters and gradients are still replicated on all GPUs
 
--ZeRO-2: Gradient Partitioning
+- ZeRO-2: Gradient Partitioning
   - Includes all of ZeRO-1
   - Additionally partitions gradients across GPUs
   - Each GPU only computes and stores gradients for its parameter portion
   - Model parameters are still replicated on all GPUs
 
--ZeRO-3: Parameter Partitioning
+- ZeRO-3: Parameter Partitioning
   - Includes all of ZeRO-1 and ZeRO-2
   - Additionally partitions model parameters across GPUs
   - Each GPU only stores a portion of the model parameters
   - Requires gathering parameters during forward/backward passes
-
-
-
 
 
 Pros:
