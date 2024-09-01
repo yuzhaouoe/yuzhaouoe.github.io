@@ -75,6 +75,11 @@ In neural networks we perform *a lot* of [matrix - matrix multiplications](https
 
 FLOPs determine the computational intensity of model, and are the factor that most prominently affects the compute resources. The number of FLOPs that a the specific hardware can perform in a second, i.e. FLOPs per Second, is called FLOPS and measures hardware performance. 
 
+> A side note on matrix multiplication. Modern GPUs are super-optimized for matrix multiplication, while other operations (e.g. layer normaliazions et similia) are less optimized. Still, this is not a problem as modern deep learnign models rely *a lot* on matrix multiplications. As a case study, this is how the FLOPs for a Bert model are distributed among classes of operations ([credit](https://horace.io/brrr_intro.html)): 
+<div style="text-align: center;">
+<img src="https://horace.io/img/perf_intro/bert_flops.png" alt="Description of image" style="width: 66%;">
+</div>
+
 
 ### Latency
 Latency refers to the **time** it takes for a model to process an input and produce an output. This metric is particularly important in real-time applications, where quick responses are critical. High latency can lead to poor user experiences or even system failures in safety-critical applications.
@@ -145,3 +150,5 @@ where $$ \mathbf{g}(a_i) $$ depends on the activations at previous layer. This m
 - [Arithmetic intensity](https://docs.nvidia.com/deeplearning/performance/dl-performance-gpu-background/index.html#understand-perf)
 - [Floating point precision at Meta](https://engineering.fb.com/2018/11/08/ai-research/floating-point-math/)
 - [On device training for ViT](https://arxiv.org/pdf/2405.10951)
+- [Data movement is all you need](https://arxiv.org/pdf/2007.00072)
+- [Making deep learning go brrrr](https://horace.io/brrr_intro.html)
