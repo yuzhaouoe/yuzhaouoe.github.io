@@ -9,7 +9,7 @@ toc: false
 - **6G-GOALS** <br> Funded by the European Union, we use Machine Learning and Artificial Intelligence for Goal and Semantic oriented communications to develop the next generation (6G) of telecom systems. See [the official website](https://sites.google.com/view/6ggoals/home) and the  [arxiv paper](https://arxiv.org/abs/2402.07573) for more info.
 
 
-- **High energy physics and graph neural networks** <br> Studying applications of Graph Neural Networks to high energy physics, as a part of the [MUCCA project](https://mucca-project.github.io/) in collaboration with the University of Liverpool and CERN.
+- **High energy physics and graph neural networks** <br> Studying applications of Graph Neural Networks to high energy physics, as a part of the [MUCCA project](https://l.infn.it/mucca-project) in collaboration with the University of Liverpool and CERN.
 
 
 - **Energy grids** <br> I worked with [**ENEL**](https://www.enel.it), Italy's largest energy supplier, and developed a model for object re-identification used to re-identify electrical lines. 
