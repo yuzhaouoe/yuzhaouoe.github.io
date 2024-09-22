@@ -25,6 +25,6 @@ seo_description:  Alessio Devoto is a PhD student in Data Science at La Sapienza
 
 🇪🇸 Erasmus student at [Universidad Politecnica de Valencia](http://www.upv.es/es), Spain. <br>
 
-🏛️ I like languages (even [dead ones!](https://www.sssscomic.com/comicpages/196.jpg)). I teach Ancient Greek, Latin and Maths to high school and college students. 
+🏛️ I like languages (even [dead ones!](https://www.sssscomic.com/comicpages/196.jpg)). I teach Ancient Greek and Latin to high school and college students. 
 
 
