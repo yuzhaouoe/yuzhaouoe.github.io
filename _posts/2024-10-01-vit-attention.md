@@ -2,13 +2,12 @@
 layout: single
 classes: wide
 author_profile: true
-title: Visualizing attention maps in pre-train Vision Transformers from Timm
+title: Visualizing attention maps in pre-trained Vision Transformers from Timm
 seo_title: Vision Transformer (ViT) Attention maps visualization
 
 published: true
 ---
 
-# Attention Maps with Timm
 
 **Goal**: Visualizing the attention scores for the `CLS` token in a pretrained Vision Transformer from the [timm library](https://pprp.github.io/timm/). 
 
