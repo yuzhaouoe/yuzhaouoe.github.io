@@ -1,13 +1,15 @@
 ---
 layout: single
 author_profile: true
-title: Visualizing attention maps in pre-train Vision Transformers from Timm
-seo_title: Vision Transformer (ViT) Attention maps visualization
-tags: 
-	- notebook
-	- tutorial
-	- pandas
-	- colab
+title: Explainability for Graphs with Pytorch Geometric and Captum
+seo_title: Colab Notebook training a simple Graph convolutional network and using Captum, TracIn and integrated gradients for explainability.
+
+tags:
+    - notebook
+    - tutorial
+    - pytorch
+    - graphs
+    - pytorch geometric
 
 published: true
 ---
