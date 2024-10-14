@@ -1,5 +1,6 @@
 ---
 layout: single
+classes: wide
 author_profile: true
 title: Visualizing attention maps in pre-train Vision Transformers from Timm
 seo_title: Vision Transformer (ViT) Attention maps visualization
