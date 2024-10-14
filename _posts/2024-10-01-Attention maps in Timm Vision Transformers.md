@@ -234,5 +234,5 @@ plt.tight_layout()
 
 ```
 
-![](assets/images/bird_maps.png)
+![](https://raw.githubusercontent.com/alessiodevoto/alessiodevoto.github.io/refs/heads/main/assets/images/bird_maps.png)
 
