@@ -234,5 +234,5 @@ plt.tight_layout()
 
 ```
 
-![](vertopal_ac88717a80ce48748c1d439a097690c7/ccb4929f49e5791ec1d05e3674bc02af4f65c236.png)
+![](assets/images/bird_maps.png)
 
