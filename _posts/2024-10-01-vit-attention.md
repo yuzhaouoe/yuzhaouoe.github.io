@@ -9,13 +9,17 @@ published: true
 ---
 
 
-**Goal**: Visualizing the attention scores for the `CLS` token in a pretrained Vision Transformer from the [timm library](https://pprp.github.io/timm/). 
+**Goal**: Visualizing the attention maps for the `CLS` token in a pretrained Vision Transformer from the [timm library](https://pprp.github.io/timm/). 
 
 
 For a better experience, open in Colab:  <a href="https://colab.research.google.com/drive/1yDuwH_5HIAHLMwb2borfl_ewuGArJFco?usp=sharing" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
 
 
+In this short notebook, we'll try to get some insights into pre-trained vision transformers by looking at attention patterns. More specifically, we'll plot the attention scores between the `CLS` token and other tokens and check whether they have a semantic interpretation or not. This is often the case, so we expect to images like this:
 
+![](https://raw.githubusercontent.com/alessiodevoto/alessiodevoto.github.io/refs/heads/main/assets/images/panda.png)
+
+ 
 ``` python
 # install timm
 !pip install timm
@@ -40,7 +44,7 @@ model = torch.hub.load('facebookresearch/deit:main', 'deit_tiny_patch16_224', pr
 print(model)
 ```
 
-```
+```python
     VisionTransformer(
       (patch_embed): PatchEmbed(
         (proj): Conv2d(3, 192, kernel_size=(16, 16), stride=(16, 16))
@@ -114,7 +118,7 @@ print(nodes)
 ```
 
 ```
-    ['x', 'patch_embed.getattr', 'patch_embed.getitem', 'patch_embed.getitem_1', 'patch_embed.getitem_2', 'patch_embed.getitem_3', 'patch_embed.eq', 'patch_embed._assert', 'patch_embed.eq_1', 'patch_embed._assert_1', 'patch_embed.proj', 'patch_embed.flatten', 'patch_embed.transpose', 'patch_embed.norm', 'pos_embed', 'cls_token', 'getattr', 'getitem', 'expand', 'cat', 'add', 'pos_drop', 'patch_drop', 'norm_pre', 'blocks.0.norm1', 'blocks.0.attn.getattr', 'blocks.0.attn.getitem', 'blocks.0.attn.getitem_1', 'blocks.0.attn.getitem_2', 'blocks.0.attn.qkv', 'blocks.0.attn.reshape', 'blocks.0.attn.permute', 'blocks.0.attn.unbind', 'blocks.0.attn.getitem_3', 'blocks.0.attn.getitem_4', 'blocks.0.attn.getitem_5', 'blocks.0.attn.q_norm', 'blocks.0.attn.k_norm', 'blocks.0.attn.mul', 'blocks.0.attn.transpose', 'blocks.0.attn.matmul', 'blocks.0.attn.softmax', 'blocks.0.attn.attn_drop', 'blocks.0.attn.matmul_1', 'blocks.0.attn.transpose_1', 'blocks.0.attn.reshape_1', 'blocks.0.attn.proj', 'blocks.0.attn.proj_drop', 'blocks.0.ls1', 'blocks.0.drop_path1', 'blocks.0.add', 'blocks.0.norm2', 'blocks.0.mlp.fc1', 'blocks.0.mlp.act', 'blocks.0.mlp.drop1', 'blocks.0.mlp.norm', 'blocks.0.mlp.fc2', 'blocks.0.mlp.drop2', 'blocks.0.ls2', 'blocks.0.drop_path2', 'blocks.0.add_1', 'blocks.1.norm1', 'blocks.1.attn.getattr', 'blocks.1.attn.getitem', 'blocks.1.attn.getitem_1', 'blocks.1.attn.getitem_2', 'blocks.1.attn.qkv', 'blocks.1.attn.reshape', 'blocks.1.attn.permute', 'blocks.1.attn.unbind', 'blocks.1.attn.getitem_3', 'blocks.1.attn.getitem_4', 'blocks.1.attn.getitem_5', 'blocks.1.attn.q_norm', 'blocks.1.attn.k_norm', 'blocks.1.attn.mul', 'blocks.1.attn.transpose', 'blocks.1.attn.matmul', 'blocks.1.attn.softmax', 'blocks.1.attn.attn_drop', 'blocks.1.attn.matmul_1', 'blocks.1.attn.transpose_1', 'blocks.1.attn.reshape_1', 'blocks.1.attn.proj', 'blocks.1.attn.proj_drop', 'blocks.1.ls1', 'blocks.1.drop_path1', 'blocks.1.add', 'blocks.1.norm2', 'blocks.1.mlp.fc1', 'blocks.1.mlp.act', 'blocks.1.mlp.drop1', 'blocks.1.mlp.norm', 'blocks.1.mlp.fc2', 'blocks.1.mlp.drop2', 'blocks.1.ls2', 'blocks.1.drop_path2', 'blocks.1.add_1', 'blocks.2.norm1', 'blocks.2.attn.getattr', 'blocks.2.attn.getitem', 'blocks.2.attn.getitem_1', 'blocks.2.attn.getitem_2', 'blocks.2.attn.qkv', 'blocks.2.attn.reshape', 'blocks.2.attn.permute', 'blocks.2.attn.unbind', 'blocks.2.attn.getitem_3', 'blocks.2.attn.getitem_4', 'blocks.2.attn.getitem_5', 'blocks.2.attn.q_norm', 'blocks.2.attn.k_norm', 'blocks.2.attn.mul', 'blocks.2.attn.transpose', 'blocks.2.attn.matmul', 'blocks.2.attn.softmax', 'blocks.2.attn.attn_drop', 'blocks.2.attn.matmul_1', 'blocks.2.attn.transpose_1', 'blocks.2.attn.reshape_1', 'blocks.2.attn.proj', 'blocks.2.attn.proj_drop', 'blocks.2.ls1', 'blocks.2.drop_path1', 'blocks.2.add', 'blocks.2.norm2', 'blocks.2.mlp.fc1', 'blocks.2.mlp.act', 'blocks.2.mlp.drop1', 'blocks.2.mlp.norm', 'blocks.2.mlp.fc2', 'blocks.2.mlp.drop2', 'blocks.2.ls2', 'blocks.2.drop_path2', 'blocks.2.add_1', 'blocks.3.norm1', 'blocks.3.attn.getattr', 'blocks.3.attn.getitem', 'blocks.3.attn.getitem_1', 'blocks.3.attn.getitem_2', 'blocks.3.attn.qkv', 'blocks.3.attn.reshape', 'blocks.3.attn.permute', 'blocks.3.attn.unbind', 'blocks.3.attn.getitem_3', 'blocks.3.attn.getitem_4', 'blocks.3.attn.getitem_5', 'blocks.3.attn.q_norm', 'blocks.3.attn.k_norm', 'blocks.3.attn.mul', 'blocks.3.attn.transpose', 'blocks.3.attn.matmul', 'blocks.3.attn.softmax', 'blocks.3.attn.attn_drop', 'blocks.3.attn.matmul_1', 'blocks.3.attn.transpose_1', 'blocks.3.attn.reshape_1', 'blocks.3.attn.proj', 'blocks.3.attn.proj_drop', 'blocks.3.ls1', 'blocks.3.drop_path1', 'blocks.3.add' ...]
+    ['x', 'patch_embed.getattr', 'patch_embed.getitem', 'patch_embed.getitem_1', 'patch_embed.getitem_2', 'patch_embed.getitem_3', 'patch_embed.eq', 'patch_embed._assert', 'patch_embed.eq_1', 'patch_embed._assert_1', 'patch_embed.proj', 'patch_embed.flatten', 'patch_embed.transpose', 'patch_embed.norm', 'pos_embed', 'cls_token', 'getattr', 'getitem', 'expand', 'cat', 'add', 'pos_drop', 'patch_drop', 'norm_pre', 'blocks.0.norm1', 'blocks.0.attn.getattr', 'blocks.0.attn.getitem', 'blocks.0.attn.getitem_1', 'blocks.0.attn.getitem_2', 'blocks.0.attn.qkv', 'blocks.0.attn.reshape', 'blocks.0.attn.permute', 'blocks.0.attn.unbind', 'blocks.0.attn.getitem_3', 'blocks.0.attn.getitem_4', 'blocks.0.attn.getitem_5', 'blocks.0.attn.q_norm', 'blocks.0.attn.k_norm', 'blocks.0.attn.mul', 'blocks.0.attn.transpose', 'blocks.0.attn.matmul', 'blocks.0.attn.softmax', 'blocks.0.attn.attn_drop', 'blocks.0.attn.matmul_1', 'blocks.0.attn.transpose_1', 'blocks.0.attn.reshape_1', 'blocks.0.attn.proj', 'blocks.0.attn.proj_drop', 'blocks.0.ls1', 'blocks.0.drop_path1', 'blocks.0.add', 'blocks.0.norm2', 'blocks.0.mlp.fc1', 'blocks.0.mlp.act', 'blocks.0.mlp.drop1', 'blocks.0.mlp.norm', 'blocks.0.mlp.fc2', 'blocks.0.mlp.drop2', 'blocks.0.ls2', 'blocks.0.drop_path2', 'blocks.0.add_1', 'blocks.1.norm1', 'blocks.1.attn.getattr', 'blocks.1.attn.getitem', 'blocks.1.attn.getitem_1', 'blocks.1.attn.getitem_2', 'blocks.1.attn.qkv', 'blocks.1.attn.reshape', 'blocks.1.attn.permute', 'blocks.1.attn.unbind', 'blocks.1.attn.getitem_3', 'blocks.1.attn.getitem_4', 'blocks.1.attn.getitem_5', 'blocks.1.attn.q_norm', 'blocks.1.attn.k_norm', 'blocks.1.attn.mul', 'blocks.1.attn.transpose', 'blocks.1.attn.matmul', 'blocks.1.attn.softmax', 'blocks.1.attn.attn_drop', 'blocks.1.attn.matmul_1', 'blocks.1.attn.transpose_1', 'blocks.1.attn.reshape_1', 'blocks.1.attn.proj', 'blocks.1.attn.proj_drop', 'blocks.1.ls1', 'blocks.1.drop_path1', 'blocks.1.add', 'blocks.1.norm2', 'blocks.1.mlp.fc1', 'blocks.1.mlp.act', 'blocks.1.mlp.drop1', 'blocks.1.mlp.norm', 'blocks.1.mlp.fc2', 'blocks.1.mlp.drop2', 'blocks.1.ls2', 'blocks.1.drop_path2', 'blocks.1.add_1', 'blocks.2.norm1', ...]
 ```
 
 ``` python
@@ -138,12 +142,7 @@ image for plotting.
 !wget https://raw.githubusercontent.com/alessiodevoto/notebooks/refs/heads/main/data/bird.jpg
 ```
 
-```    
-bird.jpg              0%[                    ]       0  --.-KB/s               
-bird.jpg            100%[===================>] 266.79K  --.-KB/s    in 0.006s  
-
-    2024-10-14 10:50:38 (46.4 MB/s) - ‘bird.jpg’ saved [273193/273193]
-
+Some image processing basic stuff.
 
 ``` python
 # Load and preprocess image
