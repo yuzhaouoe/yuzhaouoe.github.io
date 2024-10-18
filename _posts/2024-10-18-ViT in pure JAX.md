@@ -8,19 +8,19 @@ seo_title: Implementation of a Vision Transformers in pure JAX, no other framewo
 published: true
 ---
 
-I decided to do this for two reasons. The first reason is that, for years, I had to bear my Ph.D. advisor coming into the lab while I was happily coding my Pytorch mdodel, slowly sneaking at my back, stare at my screen and say - with a disappointed look - "you should definitely do this in JAX". The second reason is this nice [blog post](https://neel04.github.io/my-website/blog/pytorch_rant/) from Neel Gupta.
+I decided to do this for two reasons. The first reason is that, for years, I had to bear my Ph.D. advisor coming into the lab while I was happily coding my Pytorch model, slowly sneaking at my back, stare at my screen and say - with a disappointed look - "you should definitely do this in JAX". The second reason is this nice [blog post](https://neel04.github.io/my-website/blog/pytorch_rant/) from Neel Gupta.
 
-Every time I tried to use JAX, I ended up using Flax instead, which offers a kind of object oriented interface (similar to torch). While Flax is great, it introduces additional layers of abstraction and therefore I ended up wondering "why am I doing this". There are other frameworks as well, with different functionalities, like equinox, but they always add "another layer".
+Every time I tried to use JAX, I ended up using Flax instead, which offers a kind of object oriented interface (similar to torch). While Flax is great, it introduces additional layers of abstraction that make it similar to Pytorch and therefore I ended up wondering "why am I doing this". There are other frameworks as well, with different functionalities, like equinox, but they always add "another layer".
 
 This time, I wanted to take a different path and stick to **pure JAX** without relying on any external libraries or abstractions.
-What I do here is just a basic implementation of a Vision Transfomer. It's far from efficient, the code could be cleaner etc. etc. I just wanted to train a small model from scratch in JAX while using its "signature" functionalities like `vmap` and `jit`.
+What I do here is just a basic implementation of a Vision Transfomer. It's not super efficient, the code could be cleaner etc. etc. I just wanted to train a small model from scratch in JAX while using its "signature" functionalities like `vmap` and `jit`.
 
 It was instructive for a series of reasons. First of all, if you use oure JAX, you see a model for what it really is: a bunch of numbers stored somewhere in your local machine + a function on those models. You end up thinking of a lot of things that in torch you just take for granted, like parameters initialization and the batch size (yes, batch size, more on this later).
 
 
 For a better experience, open in Colab:  <a href="https://colab.research.google.com/drive/1wBA1UUde72yMDvZ7ITS8cFAx90HDwD5D#scrollTo=SUBw2ZtVN7Lr" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
 
-Vision Transfomer <br>
+**Vision Transfomer** <br>
 If you are not familiar with the Vision Transformer (ViT) architecture, you can take a look [here](https://arxiv.org/abs/2010.11929). Basically, ViTs treat image patches as tokens (like words in NLP models) and process them using transformer layers with bidirectional (non masked) attention. In this post, we’ll build a small ViT that can train on the Imagenette dataset, and you can even run it on your local GPU.
 
 

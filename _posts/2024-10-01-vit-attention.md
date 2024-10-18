@@ -17,7 +17,9 @@ For a better experience, open in Colab:  <a href="https://colab.research.google.
 
 In this short notebook, we'll try to get some insights into pre-trained vision transformers by looking at attention patterns. More specifically, we'll plot the attention scores between the `CLS` token and other tokens and check whether they have a semantic interpretation or not. This is often the case, so we expect to images like this:
 
-![](https://raw.githubusercontent.com/alessiodevoto/alessiodevoto.github.io/refs/heads/main/assets/images/panda.jpg)
+<div style="text-align: center;">
+<img src="https://raw.githubusercontent.com/alessiodevoto/alessiodevoto.github.io/refs/heads/main/assets/images/panda.jpg" alt="Description of image" style="width: 40%;">
+</div>
 
  
 ``` python
