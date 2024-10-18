@@ -2,12 +2,10 @@
 layout: single
 classes: wide
 author_profile: true
-
 title: Vision Transformer in *pure* JAX.
 seo_title: Implementation of a Vision Transformers in pure JAX, no other frameworks/libraries.
 
 published: true
-toc:true
 ---
 
 I decided to do this for two reasons. The first reason is that, for years, I had to bear my Ph.D. advisor coming into the lab while I was happily coding my Pytorch mdodel, slowly sneaking at my back, stare at my screen and say - with a disappointed look - "you should definitely do this in JAX". The second reason is this nice [blog post](https://neel04.github.io/my-website/blog/pytorch_rant/) from Neel Gupta.
