@@ -4,7 +4,6 @@ classes: wide
 author_profile: true
 title: Vision Transformer in *pure* JAX.
 seo_title: Implementation of a Vision Transformers in pure JAX, no other frameworks/libraries.
-toc: true
 published: true
 ---
 
