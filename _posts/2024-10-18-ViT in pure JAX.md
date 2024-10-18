@@ -4,7 +4,7 @@ classes: wide
 author_profile: true
 title: Vision Transformer in *pure* JAX.
 seo_title: Implementation of a Vision Transformers in pure JAX, no other frameworks/libraries.
-
+toc: true
 published: true
 ---
 
@@ -38,9 +38,9 @@ print("Available devices:", jax.devices()) # JAX will take care of the device pl
 
 ### Initializing the model
 
-Since JAX it’s a fully functional framework, you have to initialize all your parameters *outside* the model. This gives you a nice, low-level feel for how the model works. It’s not a magical black box onr an object, you’re working with something very "real and concrete": a set of weights + a function that processes them. The model itself is composed of: a set of parameteres (that we will store in a dictionary) + a function acting on those parameters.
+Since JAX it’s a fully functional framework, you have to initialize all your parameters *outside* the model. This gives you a nice, low-level feel for how the model works. It’s not a magical black box nor an object, you’re working with something very "real and concrete": a set of weights + a function that processes them. The model itself is composed of: a set of parameteres (that we will store in a dictionary) + a function acting on those parameters.
 
-In JAX, you always need a random key to initialize layers. This is great for ML practitioners, and you know what I'm referring to if you ever had to use [torch random seeding](https://neel04.github.io/my-website/blog/pytorch_rant/#seeding) and ended up with reproducibility errors. The main reason for JAX explicitly tracking the random keys without using a state is that this would compromise the execution of parallel code, that is one of the main perks of JAX. You can read more about randomness in JAX [here](https://jax.readthedocs.io/en/latest/jax.random.html)
+In JAX, you always need a random key to initialize layers. This is great for ML practitioners, and you know what I'm referring to if you ever had to use [torch random seeding](https://neel04.github.io/my-website/blog/pytorch_rant/#seeding) and ended up with reproducibility problems. The main reason for JAX explicitly tracking the random keys without using a state is that this would compromise the execution of parallel code, that is one of the main perks of JAX. You can read more about randomness in JAX [here](https://jax.readthedocs.io/en/latest/jax.random.html)
 
 Let's initiliaze the weights for our small ViT. What parameters are we going to need?  We need:
 
@@ -59,6 +59,7 @@ First let's define the hypeparameters of our model.
 
 ```python
 # Vision Transformer hyper-parameters
+
 image_size = 64
 patch_size = 4
 num_patches = (image_size // patch_size) ** 2
@@ -66,7 +67,6 @@ num_patches = (image_size // patch_size) ** 2
 num_layers = 4
 hidden_dim = 192
 mlp_dim = 192*4
-
 
 num_classes = 10
 num_heads = 4
