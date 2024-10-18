@@ -1,10 +1,11 @@
 ---
+title: Vision Transformer in *pure* JAX.
+seo_title: Implementation of a Vision Transformers in pure JAX, no other frameworks/libraries.
 layout: single
 classes: wide
 author_profile: true
-title: Vision Transformer in *pure* JAX.
-seo_title: Implementation of a Vision Transformers in pure JAX, no other frameworks/libraries.
 published: true
+toc:true
 ---
 
 I decided to do this for two reasons. The first reason is that, for years, I had to bear my Ph.D. advisor coming into the lab while I was happily coding my Pytorch mdodel, slowly sneaking at my back, stare at my screen and say - with a disappointed look - "you should definitely do this in JAX". The second reason is this nice [blog post](https://neel04.github.io/my-website/blog/pytorch_rant/) from Neel Gupta.
@@ -19,7 +20,7 @@ It was instructive for a series of reasons. First of all, if you use oure JAX, y
 
 For a better experience, open in Colab:  <a href="https://colab.research.google.com/drive/1wBA1UUde72yMDvZ7ITS8cFAx90HDwD5D#scrollTo=SUBw2ZtVN7Lr" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
 
-#### Vision Transfomer
+Vision Transfomer <br>
 If you are not familiar with the Vision Transformer (ViT) architecture, you can take a look [here](https://arxiv.org/abs/2010.11929). Basically, ViTs treat image patches as tokens (like words in NLP models) and process them using transformer layers with bidirectional (non masked) attention. In this post, we’ll build a small ViT that can train on the Imagenette dataset, and you can even run it on your local GPU.
 
 
