@@ -30,6 +30,14 @@ toc: true
 
 
 ## Education
+
+- **Visiting** 
+<br> The University of Edinburgh.
+<br> <i class="fas fa-map-marker-alt"></i> Edinburgh, Scotland, UK. 
+<br> Worked mainly on NLP with a focus on efficient inference (KV Cache compression) and explainability.
+<br> *[March 2024 - July 2024]*
+
+
 - **PhD in Data Science** 
 <br> La Sapienza, University of Rome.
 <br> Focus on Modular and Dynamic Neural Networks. 
@@ -40,7 +48,6 @@ toc: true
 <br> *Final Mark: 110/ 110 cum Laude.*
 <br> *[September 2019 - January 2022]*
 	> *Thesis, in collaboration with [ENEL](https://www.enel.com/it): [Hybrid Siamese Neural Networks for object re-identification](https://ieeexplore.ieee.org/document/9802679)* 
-
 
 - **Erasmus** 
 <br> Universidad Politecnica de Valencia.
