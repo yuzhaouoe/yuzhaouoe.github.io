@@ -10,24 +10,22 @@ published: true
 
 I decided to do this for two reasons. The first reason is that, for years, I had to bear my Ph.D. advisor coming into the lab while I was happily coding my Pytorch model, slowly sneaking at my back, stare at my screen and say - with a disappointed look - "you should definitely do this in JAX". The second reason is this nice [blog post](https://neel04.github.io/my-website/blog/pytorch_rant/) from Neel Gupta.
 
-Every time I tried to use JAX, I ended up using Flax instead, which offers a kind of object oriented interface (similar to torch). While Flax is great, it introduces additional layers of abstraction that make it similar to Pytorch and therefore I ended up wondering "why am I doing this". There are other great frameworks as well, with different functionalities, like equinox (maybe closer to JAX's original nature), but they always add "another layer".
+However, every time I tried to use JAX, I ended up using Flax instead, which offers a kind of object oriented interface (similar to torch). While Flax is great, it introduces additional layers of abstraction that make it similar to Pytorch and therefore I ended up wondering: "why am I doing this?". There are other great frameworks as well, with different functionalities, like equinox (maybe closer to JAX's original nature), but they always add "another layer".
 
-This time, I wanted to take a different path and stick to **pure JAX**, without relying on any external libraries or abstractions.
-So what I do here is just a basic implementation of a small Vision Transfomer. In this implementation, I’ve built a basic Vision Transformer from scratch. While it may not be the most efficient and could benefit from cleaner code, my goal was to focus on training a small model in JAX while utilizing its core functionalities,  like `vmap` and `jit`.
+This time, I wanted to take a taste of **bare JAX** and avoid external libraries or abstractions. In this implementation, I’ve built a basic Vision Transformer entirely from scratch. Although it may not be the most efficient code, my focus is to explore JAX directly and train a small model while leveraging JAX’s core features, like `vmap` and `jit`, without any external frameworks.
 
 I will cover the following topics: 
 
-1. Short recap of ViT architecture
-2. Initialization of the weights (in bare JAX it can take a while)
-3. Coding the ViT logic and parallelization `jax.vmap`
-4. Training witt just in time `jax.jit`
+1. Initialization of the weights (in pure JAX it can take a while)
+2. Coding the ViT logic and parallelization `jax.vmap`
+3. Training witt just in time `jax.jit`
 
-📣 if you are not interested in model initialization, you can just skip to the [model function](https://alessiodevoto.github.io/ViT-in-pure-JAX/#the-model-is-just-a-function)
+✋ If you are not interested in model initialization, you can just skip to the [model function](https://alessiodevoto.github.io/ViT-in-pure-JAX/#the-model-is-just-a-function)
 
 For a better experience, open in Colab:  <a href="https://colab.research.google.com/drive/1wBA1UUde72yMDvZ7ITS8cFAx90HDwD5D#scrollTo=SUBw2ZtVN7Lr" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
 
-**Vision Transfomer** <br>
-If you are not familiar with the Vision Transformer (ViT) architecture, you can take a look [here](https://arxiv.org/abs/2010.11929). Basically, ViTs treat image patches as tokens (like words in NLP models) and process them using transformer layers with bidirectional (non masked) attention. In this post, we’ll build a small ViT that can train on the Imagenette dataset, and you can even run it on your local machine.
+###  Vision Transfomer 
+If you are not familiar with the Vision Transformer (ViT) architecture, you can take a look [here](https://arxiv.org/abs/2010.11929). In short, ViTs treat split images into patches, and treat patches as tokens (like words in NLP models), processing them using transformer layers with bidirectional (non masked) attention. In this post, we’ll build a small ViT that can train on the Imagenette dataset, and you can even run it on your local machine.
 
 
 Speaking of GPUs, JAX offers seamless handling of hardware acceleration. It automatically detects and utilizes available GPUs/TPUs without requiring explicit code changes.
@@ -44,9 +42,22 @@ print("Available devices:", jax.devices()) # JAX will take care of the device pl
 
 ### Initializing the model
 
-JAX is a fully functional framework, which means that model parameters are treated as a distinct set of numbers, existing "outside" the model itself.This gives you a nice, low-level feel for how the model works.  Instead of encapsulating parameters within an object, you’re directly manipulating a concrete set of weights along with a function that processes them.
+JAX is a fully functional framework, which means that model parameters are treated as a distinct set of numbers, existing "outside" the model itself. This gives you a nice, low-level feel for how the model works. Instead of encapsulating parameters within an object (like in torch), you’re directly manipulating a concrete set of weights along with a function that processes them.
 
-To initialize these weights effectively, we need some randomness (just like in torch). In JAX, every layer initialization requires a random key, which ensures that the randomness is both explicit and controllable.  This is great for ML practitioners, and you know what I'm referring to if you ever had to use [torch random seeding](https://neel04.github.io/my-website/blog/pytorch_rant/#seeding) and ended up with reproducibility problems. The main reason for JAX explicitly tracking the random keys without using a global random state is that this would compromise the execution of parallel code, that is one of the main perks of JAX. You can read more about randomness in JAX [here](https://jax.readthedocs.io/en/latest/jax.random.html)
+To initialize these weights at random, we need some random primitives (just like in torch). In JAX, every call to a random primitive requires a random key, which ensures that the randomness is both explicit and controllable.  This means that instead of going 
+
+```python
+a_tensor = torch.randn(tensor_shape)
+```
+
+you have to explicily allocate a key first and then use it to generate a random number, like this:
+
+```python
+key = random.PRNGKey(42)
+a_tensor = random.normal(tensor_shape)
+```
+
+This is great for ML practitioners, and you know what I'm talking about if you ever had to use [torch random seeding](https://neel04.github.io/my-website/blog/pytorch_rant/#seeding) and ended up with reproducibility problems. The main reason for JAX explicitly tracking the random keys without using a global random state is that this would compromise the execution of parallel code, that is one of the main perks of JAX. You can read more about randomness in JAX [here](https://jax.readthedocs.io/en/latest/jax.random.html)
 
 Let's initiliaze the weights for our small ViT. we need:
 
@@ -77,7 +88,6 @@ mlp_dim = 192*4
 num_classes = 10
 num_heads = 4
 head_dim = hidden_dim//num_heads
-
 ```
 
 Now we create a dictionary to store our weights.
@@ -117,7 +127,6 @@ import jax.numpy as jnp # this is what we use to manipulate tensors in JAX. It i
 
 ```python
 # for the class token, we just need a single vector of the same size as a token
-cls_token_key, key = random.split(key)
 cls_token = jnp.zeros((1,hidden_dim))
 vit_parameters['cls_token'] = cls_token
 
