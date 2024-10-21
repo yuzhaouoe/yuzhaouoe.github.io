@@ -25,7 +25,7 @@ I will cover the following topics:
 You can also <a href="https://colab.research.google.com/drive/1wBA1UUde72yMDvZ7ITS8cFAx90HDwD5D#scrollTo=SUBw2ZtVN7Lr" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
 
 ###  Vision Transfomer 
-If you are not familiar with the Vision Transformer (ViT) architecture, you can take a look [here](https://arxiv.org/abs/2010.11929). In short, ViTs treat split images into patches, and treat patches as tokens (like words in NLP models), processing them using transformer layers with bidirectional (non masked) attention. In this post, we’ll build a small ViT that can train on the Imagenette dataset, and you can even run it on your local machine.
+If you are not familiar with the Vision Transformer (ViT) architecture, you can take a look [here](https://arxiv.org/abs/2010.11929). In short, ViTs split images into patches, and treat patches as tokens (like words in NLP models), processing them using transformer layers with bidirectional (non masked) attention. In this post, we’ll build a small ViT that can train on the Imagenette dataset, and you can even run it on your local machine.
 
 
 Speaking of GPUs, JAX offers seamless handling of hardware acceleration. It automatically detects and utilizes available GPUs/TPUs without requiring explicit code changes.
@@ -54,7 +54,7 @@ you have to explicily allocate a key first and then use it to generate a random 
 
 ```python
 key = random.PRNGKey(42)
-a_tensor = random.normal(tensor_shape)
+a_tensor = random.normal(key, tensor_shape)
 ```
 
 This is great for ML practitioners, and you know what I'm talking about if you ever had to use [torch random seeding](https://neel04.github.io/my-website/blog/pytorch_rant/#seeding) and ended up with reproducibility problems. The main reason for JAX explicitly tracking the random keys without using a global random state is that this would compromise the execution of parallel code, that is one of the main perks of JAX. You can read more about randomness in JAX [here](https://jax.readthedocs.io/en/latest/jax.random.html)
