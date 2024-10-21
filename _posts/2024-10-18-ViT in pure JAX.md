@@ -246,7 +246,6 @@ def self_attention(x, attn_params):
     k = jnp.matmul(x, k_w) + k_b
     v = jnp.matmul(x, v_w) + v_b
 
-
     # reshape to have heads
     q = q.reshape(num_heads, n, head_dim)
     k = k.reshape(num_heads, n, head_dim)
@@ -284,12 +283,12 @@ def transformer_block(inp, block_params):
     # attention
     x = layer_norm(inp, ln1_params)
     x = self_attention(x, attn_params)
-    skip = x + inp
+    res = x + inp
 
     # mlp
-    x = layer_norm(skip, ln2_params)
+    x = layer_norm(res, ln2_params)
     x = mlp(x, mlp_params)
-    x = x + skip
+    x = x + res
 
     return x
 ```
@@ -413,7 +412,6 @@ from torch.utils.data import DataLoader
 
 mean, std = [0.485, 0.456, 0.406], [0.229, 0.224, 0.225]
 
-
 train_dataset = Imagenette(
     root='/home/aledev/datasets/imagenette3',
     size="160px",
@@ -422,7 +420,6 @@ train_dataset = Imagenette(
     transform=transforms.Compose([transforms.Resize((image_size,image_size)),  transforms.ToTensor(), transforms.Normalize(mean, std)])
     )
 train_loader = DataLoader(train_dataset, batch_size=256, shuffle=True)
-
 
 test_dataset = Imagenette(
     root='/home/aledev/datasets/imagenette3',
@@ -440,7 +437,6 @@ Let's code a simple evaluation function that loops over the test data and comput
 ```python
 from tqdm import tqdm
 
-
 def eval(vit_parameters):
 
   correct = 0
@@ -453,7 +449,6 @@ def eval(vit_parameters):
     logits = jax.vmap(transformer, in_axes=(0, None))(img, vit_parameters)
     prediction = jnp.argmax(logits, axis=-1)
     correct += jnp.sum(prediction == target).item()
-
 
   acc = correct / len(test_dataset)
 
@@ -571,19 +566,12 @@ for epoch in range(num_epochs):
         # reshape and get one hot fot loss
         target_one_hot = jax.nn.one_hot(target, num_classes)
 
-
         current_loss, vit_parameters = train_step(data, vit_parameters, target_one_hot)
 
         progress_bar.set_postfix({'loss': current_loss})
 
-
     eval_acc = eval(vit_parameters)
     print(f'Epoch: {epoch}, Eval acc: {eval_acc}')
-
-
-
-
-
 ```
 
     Epoch 1/20: 100%|██████████| 37/37 [00:29<00:00,  1.26it/s, loss=2.1218076]
