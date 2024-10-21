@@ -40,6 +40,22 @@ print("Available devices:", jax.devices()) # JAX will take care of the device pl
     Available devices: [TpuDevice(id=0, process_index=0, coords=(0,0,0), core_on_chip=0), TpuDevice(id=1, process_index=0, coords=(0,0,0), core_on_chip=1), TpuDevice(id=2, process_index=0, coords=(1,0,0), core_on_chip=0), TpuDevice(id=3, process_index=0, coords=(1,0,0), core_on_chip=1), TpuDevice(id=4, process_index=0, coords=(0,1,0), core_on_chip=0), TpuDevice(id=5, process_index=0, coords=(0,1,0), core_on_chip=1), TpuDevice(id=6, process_index=0, coords=(1,1,0), core_on_chip=0), TpuDevice(id=7, process_index=0, coords=(1,1,0), core_on_chip=1)]
 
 
+In this notebook, we are going to use a small ViT, with the following hyperparameters:
+
+```python
+image_size = 64
+patch_size = 4
+num_patches = (image_size // patch_size) ** 2
+
+num_layers = 4      # number of transfomer layers
+hidden_dim = 192    # hidden dimension of each token
+mlp_dim = 192*4     # hidden dimension in the MLP 
+
+num_classes = 10    # Imagenette number of classes
+num_heads = 4       # attention heads
+head_dim = hidden_dim//num_heads
+```
+
 ### Initializing the model
 
 JAX is a fully functional framework, which means that model parameters are treated as a distinct set of numbers, existing "outside" the model itself. This gives you a nice, low-level feel for how the model works. Instead of encapsulating parameters within an object (like in torch), you’re directly manipulating a concrete set of weights along with a function that processes them.
@@ -57,9 +73,9 @@ key = random.PRNGKey(42)
 a_tensor = random.normal(key, tensor_shape)
 ```
 
-This is great for ML practitioners, and you know what I'm talking about if you ever had to use [torch random seeding](https://neel04.github.io/my-website/blog/pytorch_rant/#seeding) and ended up with reproducibility problems. The main reason for JAX explicitly tracking the random keys without using a global random state is that this would compromise the execution of parallel code, that is one of the main perks of JAX. You can read more about randomness in JAX [here](https://jax.readthedocs.io/en/latest/jax.random.html)
+This is great for ML practitioners, and you know what I'm talking about if you ever had to use [ and ended up with reproducibility issues](https://neel04.github.io/my-website/blog/pytorch_rant/#seeding). The main reason for JAX explicitly tracking the random keys without using a global random state is that this would compromise the execution of parallel code, that is one of the main perks of JAX. You can read more about randomness in JAX [here](https://jax.readthedocs.io/en/latest/jax.random.html).
 
-Let's initiliaze the weights for our small ViT. we need:
+Let's see what parameters we need for our ViT. Here is the list:
 
 - a `CLS` (classification) token
 - a projection to transform the patches into tokens
@@ -67,30 +83,8 @@ Let's initiliaze the weights for our small ViT. we need:
 - N transformer blocks made of multihead attention and Feed Forward MLP
 - a final head for classification
 
-In order to make everything cleaner, we'll have a function to initialize each submodule of our Vit.
-First let's define the hypeparameters of our model.
 
-
-> This part might be somewhat boring especially if you come from torch, you might want to skip and jump to the coding of the [model function itself](https://alessiodevoto.github.io/ViT-in-pure-JAX/#the-model-is-just-a-function)
-
-
-```python
-# Vision Transformer hyper-parameters
-
-image_size = 64
-patch_size = 4
-num_patches = (image_size // patch_size) ** 2
-
-num_layers = 4
-hidden_dim = 192
-mlp_dim = 192*4
-
-num_classes = 10
-num_heads = 4
-head_dim = hidden_dim//num_heads
-```
-
-Now we create a dictionary to store our weights.
+As mentioned before, these parameters are just numbers that we can store in a dictionary like this:
 
 
 ```python
@@ -105,39 +99,26 @@ vit_parameters = {
 }
 ```
 
-We’ll also need a random key for parameter initialization:
 
-
-```python
-from jax import random
-
-key = random.PRNGKey(42)
-key, *layer_keys = random.split(key, num_layers+1)
-```
-
-As we mentioned before, we need to initialize each set of weights separately. Again, we could use a library for this, like optax, but we want to go through the process manually to better understand what's happening under the hood.
+We now need to initialize each set of weights separately. Again, we could use a library for this, like optax, but we want to go through the process manually to better understand what's happening under the hood.
 
 Let's first initialize class token, patch_embed, positional_encoding and head.
 
-
 ```python
 import jax.numpy as jnp # this is what we use to manipulate tensors in JAX. It is supers similar to numpy
-```
 
-
-```python
 # for the class token, we just need a single vector of the same size as a token
 cls_token = jnp.zeros((1,hidden_dim))
 vit_parameters['cls_token'] = cls_token
 
 # for the patch embedding, we need to consider each patch and 3 channels and project it into the hidden dimension
 patch_embed_key, key = random.split(key)
-patch_embed = random.normal(patch_embed_key, ((3 * patch_size * patch_size), hidden_dim)) * jnp.sqrt(2.0 / (hidden_dim))
+patch_embed = random.normal(patch_embed_key, ((3 * patch_size * patch_size), hidden_dim)) 
 vit_parameters['patch_embed'] = patch_embed
 
 # the positional encoding is just a value we add to each patch in the image
 pos_enc_key, key = random.split(key)
-pos_enc = random.normal(pos_enc_key, (num_patches,  hidden_dim)) * 0.02
+pos_enc = random.normal(pos_enc_key, (num_patches,  hidden_dim)) 
 vit_parameters['positional_encoding'] = pos_enc
 
 # The head will consider only the class token and project it into the number of classes
@@ -145,15 +126,13 @@ head_key, key = random.split(key)
 head_params = random.normal(head_key, (hidden_dim, num_classes)) * jnp.sqrt(6.0 / (hidden_dim))
 head_bias = jnp.zeros(num_classes)
 vit_parameters['head'] = (head_params, head_bias)
-
 ```
 
-Now, it's time to initialize the transformer blocks. Each transformer block is made up of `attention`, `mlp` and `layer normalization`. We define a function to initilize each of these components.
+Now, it's time to initialize the transformer blocks. Each transformer block is made up of `attention`, `mlp` and `layer normalization`. We define a function to initialize each of these components.
 
-I'll do it using [Xavier intialization](https://paperswithcode.com/method/xavier-initialization), but this is not crucial.
+I'll do it using [Xavier intialization](https://paperswithcode.com/method/xavier-initialization), but this is not crucial and you can just use a random normal.
 
 For the MLP, we need weights and biases for 2 layers.
-
 ```python
 def initialize_mlp(hidden_dim, mlp_dim, key):
     w1_key, w2_key = random.split(key)
@@ -172,7 +151,6 @@ def initialize_mlp(hidden_dim, mlp_dim, key):
 ```
 
 For attention, we need query, key, and value weights for multiple heads.
-
 ```python
 def initialize_attention(hidden_dim, num_heads, key):
     q_key, k_key, v_key = random.split(key, 3)
@@ -202,9 +180,7 @@ def initialize_layer_norm(hidden_dim):
 
 ```
 
-We are now ready to initialize all the weights in each transformer layer! We create a set of parameters for each layer and store them in our dictionary.
-
-
+We are now ready to initialize all the weights in each transformer layer! Let's create a set of parameters for each layer and store them in our dictionary.
 ```python
 key = random.PRNGKey(42)
 key, *layer_keys = random.split(key, num_layers+1)
@@ -222,34 +198,26 @@ final_layer_norm_params = initialize_layer_norm(hidden_dim)
 vit_parameters['final_layer_norm'] = final_layer_norm_params
 ```
 
+Finally, we can now write the code for the transformer encoder!
+
+
 ### The Model is Just a Function
 
-One thing we quickly notice about JAX is that everything is a function — including models. This is very different from torch, where we usually look at the model as a composition of objects or submodules. So once we’ve got our parameters ready, we’ll write the forward pass as a *just* a function.  The ViT function will take the ViT parameters and an image as input.
-
-Before writing the actual code for the ViT, we come to another special feature o JAX: *parallelization* with `vmap.` Thanks to this, we'll just code the model as if there were no batch dimension and then use `vmap` to automagically handle batches. This is a great improvement as we don't have to reason in one additional dimension and there will be no need for stuff like `batch,sequence,dim = input.shape` (unlike in torch.)
-
-So from now on, forget about the batch dimension.
-
+One thing we quickly notice about JAX is that everything is a function — including models. This is very different from torch, where we usually look at the model as a composition of objects (`nn.Module`s). So we’ll write the forward pass as  *just* a function. The ViT function will take the ViT parameters and an image as input, that is:
 
 ```python
-# First, some utility functions: a relu and a softmax
-
-def relu(input):
-    return jnp.maximum(0, input)
-
-def softmax(x, axis=-1):
-    x_max = jnp.max(x, axis=axis, keepdims=True)
-    x_shifted = x - x_max
-    exp_x = jnp.exp(x_shifted)
-    return exp_x / jnp.sum(exp_x, axis=axis, keepdims=True)
+prediction = vit_function(vit_parameters, imnage)
 ```
 
-Now, the real "logic" of the model. Don't forget that each block is nothing but a *function* over the **model parameters** and an **input**.
+As we can see, the parameters are "outside" of the model.
+
+Before writing the actual code for the ViT, we come to another special feature o JAX: *parallelization* with `vmap.` Thanks to this, we'll just pretend there is no batch dimension and then use `vmap` to automagically handle batches. This is a great improvement as we don't have to reason in one additional dimension and there will be no need for stuff like `batch,sequence,dim = input.shape` (unlike torch.) So from now on, forget about the batch dimension.
+
+Don't forget that each block is nothing but a *function* over the **model parameters** and an **input**.
 
 I won't explain each block in detail, as this is pretty standard and there is plenty of material out there to learn how a transformer works.
 
 For the MLP, we just perform an up and down projection with a Relu activation function in the middle.
-
 ```python
 def mlp(x, mlp_params):
 
@@ -264,7 +232,6 @@ def mlp(x, mlp_params):
 ```
 
 Self attention, the only catch here is to project into multiple heads and back.
-
 ```python
 def self_attention(x, attn_params):
 
@@ -297,7 +264,6 @@ def self_attention(x, attn_params):
 ```
 
 Layer normalization, no need to explain here.
-
 ```python
 def layer_norm(x, layernorm_params):
     # a simple layer norm
@@ -308,8 +274,7 @@ def layer_norm(x, layernorm_params):
 ```
 
 
-Finally, we can assemble attention and mlps into a transformer block ...
-
+Finally, we can assemble attention and mlps into a transformer block.
 ```python
 def transformer_block(inp, block_params):
 
@@ -329,7 +294,6 @@ def transformer_block(inp, block_params):
     return x
 ```
 
-... and stack stack them to form a full transformer encoder.
 In order to transform an image into a set of tokens, we use [einops](https://einops.rocks/), which offers a highly expressive interface to reshape tensors. Another way would be applying convolutions but here we are just using bare JAX code so we get a sequence of tokens from an image like this:
 
 ```python
@@ -337,7 +301,7 @@ from einops import rearrange
 patches = rearrange (image, 'c (h p1) (w p2) -> (h w) (p1 p2 c)', p1=patch_size, p2=patch_size)
 ```
 
-The final transformer then obtained by adding a class token and positional embeddings, and looping through the blocks.
+The final transformer is then obtained by adding a class token and positional embeddings, and looping through a stack of blocks.
 
 ```python
 from einops import rearrange
@@ -370,7 +334,7 @@ def transformer(image, vit_parameters):
 
 ```
 
-Let's test it by forwarding a sample image
+Let's test it on a random input:
 
 ```python
 sample_image = random.normal(key, (3 ,image_size, image_size))
@@ -383,7 +347,7 @@ print("Output shape:", prediction.shape) # should be (num_classes,)
 
 ### Vectorized Mapping with `vmap`
 
-Before jumping into training, we'll look at one of the coolest features JAX offers: `vmap`. This allows you to vectorize your functions, meaning you can apply them over batches of data without writing explicit loops. In a way, it’s like automatic batching. You write a function that works on a single example, and `vmap` will apply it to all examples in a batch in one go.
+As anticipated, before jumping into training, we'll look at one of the coolest features JAX offers: `vmap`. This allows you to vectorize your functions, meaning you can apply them over batches of data without writing explicit loops. In a way, it’s like automatic batching. You write a function that works on a single example, and `vmap` will apply it to all examples in a batch in one go.
 
 For example, if you have a function that processes a single image, you can turn it into a function that processes an entire batch of images with just one line:
 
@@ -439,7 +403,7 @@ print("Loss:", l)
 
 ### Dataset Loading (Stealing From PyTorch)
 
-For dataset loading, I’m going to steal some code from PyTorch. PyTorch’s data utilities are fantastic, and since this isn’t a post about data loading, we’ll skip the hassle of reinventing the wheel here.
+For dataset loading, I’m going to steal some code from PyTorch. PyTorch’s data utilities work really well, and since this isn’t a post about data loading, we’ll skip the hassle of reinventing the wheel here.
 
 
 ```python
