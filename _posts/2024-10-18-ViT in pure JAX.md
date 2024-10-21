@@ -18,11 +18,11 @@ I will cover the following topics:
 
 1. Initialization of the weights (in pure JAX it can take a while)
 2. Coding the ViT logic and parallelization `jax.vmap`
-3. Training witt just in time `jax.jit`
+3. Training with just in time `jax.jit`
 
-✋ If you are not interested in model initialization, you can just skip to the [model function](https://alessiodevoto.github.io/ViT-in-pure-JAX/#the-model-is-just-a-function)
+✋ If you are not interested in model initialization, you can just skip to the core part where we implement the [model and train it](https://alessiodevoto.github.io/ViT-in-pure-JAX/#the-model-is-just-a-function).
 
-For a better experience, open in Colab:  <a href="https://colab.research.google.com/drive/1wBA1UUde72yMDvZ7ITS8cFAx90HDwD5D#scrollTo=SUBw2ZtVN7Lr" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
+You can also <a href="https://colab.research.google.com/drive/1wBA1UUde72yMDvZ7ITS8cFAx90HDwD5D#scrollTo=SUBw2ZtVN7Lr" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
 
 ###  Vision Transfomer 
 If you are not familiar with the Vision Transformer (ViT) architecture, you can take a look [here](https://arxiv.org/abs/2010.11929). In short, ViTs treat split images into patches, and treat patches as tokens (like words in NLP models), processing them using transformer layers with bidirectional (non masked) attention. In this post, we’ll build a small ViT that can train on the Imagenette dataset, and you can even run it on your local machine.
