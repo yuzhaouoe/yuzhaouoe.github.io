@@ -22,6 +22,8 @@ I will cover the following topics:
 3. Coding the ViT logic and parallelization `jax.vmap`
 4. Training witt just in time `jax.jit`
 
+📣 if you are not interested in model initialization, you can just skip to the [model function](https://alessiodevoto.github.io/ViT-in-pure-JAX/#the-model-is-just-a-function)
+
 For a better experience, open in Colab:  <a href="https://colab.research.google.com/drive/1wBA1UUde72yMDvZ7ITS8cFAx90HDwD5D#scrollTo=SUBw2ZtVN7Lr" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
 
 **Vision Transfomer** <br>
@@ -366,11 +368,9 @@ sample_image = random.normal(key, (3 ,image_size, image_size))
 prediction = transformer(sample_image, vit_parameters)
 print("Output shape:", prediction.shape) # should be (num_classes,)
 
-> Output shape: (10,)
-
 ```
 
-
+    Output shape: (10,)
 
 ### Vectorized Mapping with `vmap`
 
