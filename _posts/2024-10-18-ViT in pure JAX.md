@@ -10,21 +10,25 @@ published: true
 
 I decided to do this for two reasons. The first reason is that, for years, I had to bear my Ph.D. advisor coming into the lab while I was happily coding my Pytorch model, slowly sneaking at my back, stare at my screen and say - with a disappointed look - "you should definitely do this in JAX". The second reason is this nice [blog post](https://neel04.github.io/my-website/blog/pytorch_rant/) from Neel Gupta.
 
-Every time I tried to use JAX, I ended up using Flax instead, which offers a kind of object oriented interface (similar to torch). While Flax is great, it introduces additional layers of abstraction that make it similar to Pytorch and therefore I ended up wondering "why am I doing this". There are other frameworks as well, with different functionalities, like equinox, but they always add "another layer".
+Every time I tried to use JAX, I ended up using Flax instead, which offers a kind of object oriented interface (similar to torch). While Flax is great, it introduces additional layers of abstraction that make it similar to Pytorch and therefore I ended up wondering "why am I doing this". There are other great frameworks as well, with different functionalities, like equinox (maybe closer to JAX's original nature), but they always add "another layer".
 
-This time, I wanted to take a different path and stick to **pure JAX** without relying on any external libraries or abstractions.
-What I do here is just a basic implementation of a Vision Transfomer. It's not super efficient, the code could be cleaner etc. etc. I just wanted to train a small model from scratch in JAX while using its "signature" functionalities like `vmap` and `jit`.
+This time, I wanted to take a different path and stick to **pure JAX**, without relying on any external libraries or abstractions.
+So what I do here is just a basic implementation of a small Vision Transfomer. In this implementation, I’ve built a basic Vision Transformer from scratch. While it may not be the most efficient and could benefit from cleaner code, my goal was to focus on training a small model in JAX while utilizing its core functionalities,  like `vmap` and `jit`.
 
-It was instructive for a series of reasons. First of all, if you use oure JAX, you see a model for what it really is: a bunch of numbers stored somewhere in your local machine + a function on those models. You end up thinking of a lot of things that in torch you just take for granted, like parameters initialization and the batch size (yes, batch size, more on this later).
+I will cover the following topics: 
 
+1. Short recap of ViT architecture
+2. Initialization of the weights (in bare JAX it can take a while)
+3. Coding the ViT logic and parallelization `jax.vmap`
+4. Training witt just in time `jax.jit`
 
 For a better experience, open in Colab:  <a href="https://colab.research.google.com/drive/1wBA1UUde72yMDvZ7ITS8cFAx90HDwD5D#scrollTo=SUBw2ZtVN7Lr" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
 
 **Vision Transfomer** <br>
-If you are not familiar with the Vision Transformer (ViT) architecture, you can take a look [here](https://arxiv.org/abs/2010.11929). Basically, ViTs treat image patches as tokens (like words in NLP models) and process them using transformer layers with bidirectional (non masked) attention. In this post, we’ll build a small ViT that can train on the Imagenette dataset, and you can even run it on your local GPU.
+If you are not familiar with the Vision Transformer (ViT) architecture, you can take a look [here](https://arxiv.org/abs/2010.11929). Basically, ViTs treat image patches as tokens (like words in NLP models) and process them using transformer layers with bidirectional (non masked) attention. In this post, we’ll build a small ViT that can train on the Imagenette dataset, and you can even run it on your local machine.
 
 
-Speaking of GPUs, JAX offers seamless handling of hardware acceleration. It automatically detects and utilizes available GPUs without requiring explicit code changes.
+Speaking of GPUs, JAX offers seamless handling of hardware acceleration. It automatically detects and utilizes available GPUs/TPUs without requiring explicit code changes.
 
 
 ```python
@@ -38,13 +42,13 @@ print("Available devices:", jax.devices()) # JAX will take care of the device pl
 
 ### Initializing the model
 
-Since JAX it’s a fully functional framework, you have to initialize all your parameters *outside* the model. This gives you a nice, low-level feel for how the model works. It’s not a magical black box nor an object, you’re working with something very "real and concrete": a set of weights + a function that processes them. The model itself is composed of: a set of parameteres (that we will store in a dictionary) + a function acting on those parameters.
+JAX is a fully functional framework, which means that model parameters are treated as a distinct set of numbers, existing "outside" the model itself.This gives you a nice, low-level feel for how the model works.  Instead of encapsulating parameters within an object, you’re directly manipulating a concrete set of weights along with a function that processes them.
 
-In JAX, you always need a random key to initialize layers. This is great for ML practitioners, and you know what I'm referring to if you ever had to use [torch random seeding](https://neel04.github.io/my-website/blog/pytorch_rant/#seeding) and ended up with reproducibility problems. The main reason for JAX explicitly tracking the random keys without using a state is that this would compromise the execution of parallel code, that is one of the main perks of JAX. You can read more about randomness in JAX [here](https://jax.readthedocs.io/en/latest/jax.random.html)
+To initialize these weights effectively, we need some randomness (just like in torch). In JAX, every layer initialization requires a random key, which ensures that the randomness is both explicit and controllable.  This is great for ML practitioners, and you know what I'm referring to if you ever had to use [torch random seeding](https://neel04.github.io/my-website/blog/pytorch_rant/#seeding) and ended up with reproducibility problems. The main reason for JAX explicitly tracking the random keys without using a global random state is that this would compromise the execution of parallel code, that is one of the main perks of JAX. You can read more about randomness in JAX [here](https://jax.readthedocs.io/en/latest/jax.random.html)
 
-Let's initiliaze the weights for our small ViT. What parameters are we going to need?  We need:
+Let's initiliaze the weights for our small ViT. we need:
 
-- a CLS (classification) token
+- a `CLS` (classification) token
 - a projection to transform the patches into tokens
 - a positional encoding
 - N transformer blocks made of multihead attention and Feed Forward MLP
@@ -54,7 +58,7 @@ In order to make everything cleaner, we'll have a function to initialize each su
 First let's define the hypeparameters of our model.
 
 
-> This part is might be somewhat boring especially if you come from torch, you might want to skip and jump to the coding of the model function itself.
+> This part might be somewhat boring especially if you come from torch, you might want to skip and jump to the coding of the [model function itself](https://alessiodevoto.github.io/ViT-in-pure-JAX/#the-model-is-just-a-function)
 
 
 ```python
@@ -201,14 +205,10 @@ for i in range(num_layers):
     ln2_params = initialize_layer_norm(hidden_dim)
     vit_parameters['layers'].append((mlp_params, attn_params, ln1_params, ln2_params))
 
-
-
 # we also have a final layer norm outside the loop
 final_layer_norm_key, key = random.split(key)
 final_layer_norm_params = initialize_layer_norm(hidden_dim)
 vit_parameters['final_layer_norm'] = final_layer_norm_params
-
-
 ```
 
 ### The Model is Just a Function
@@ -225,7 +225,6 @@ So from now on, forget about the batch dimension.
 
 def relu(input):
     return jnp.maximum(0, input)
-
 
 def softmax(x, axis=-1):
     x_max = jnp.max(x, axis=axis, keepdims=True)
@@ -253,7 +252,7 @@ def mlp(x, mlp_params):
     return down_proj
 ```
 
-Self attention, the only catch here is to project into multiple heads.
+Self attention, the only catch here is to project into multiple heads and back.
 
 ```python
 def self_attention(x, attn_params):
@@ -286,7 +285,7 @@ def self_attention(x, attn_params):
     return output
 ```
 
-Well...
+Layer normalization, no need to explain here.
 
 ```python
 def layer_norm(x, layernorm_params):
@@ -298,7 +297,7 @@ def layer_norm(x, layernorm_params):
 ```
 
 
-Finally, we can assemble attention and mlps into a transformer block!
+Finally, we can assemble attention and mlps into a transformer block ...
 
 ```python
 def transformer_block(inp, block_params):
@@ -319,22 +318,22 @@ def transformer_block(inp, block_params):
     return x
 ```
 
-And stack stack them to form a transformer.
+... and stack stack them to form a full transformer encoder.
 In order to transform an image into a set of tokens, we use [einops](https://einops.rocks/), which offers a highly expressive interface to reshape tensors. Another way would be applying convolutions but here we are just using bare JAX code so we get a sequence of tokens from an image like this:
 
 ```python
 from einops import rearrange
-patches = rearrange (patches, 'c (h p1) (w p2) -> (h w) (p1 p2 c)', p1=patch_size, p2=patch_size)
+patches = rearrange (image, 'c (h p1) (w p2) -> (h w) (p1 p2 c)', p1=patch_size, p2=patch_size)
 ```
 
 The final transformer then obtained by adding a class token and positional embeddings, and looping through the blocks.
 
 ```python
 from einops import rearrange
-def transformer(patches, vit_parameters):
+def transformer(image, vit_parameters):
 
     # reshape image from c,h,w -> num_patches, patch_size*patch_size
-    patches = rearrange (patches, 'c (h p1) (w p2) -> (h w) (p1 p2 c)', p1=patch_size, p2=patch_size)
+    patches = rearrange (image, 'c (h p1) (w p2) -> (h w) (p1 p2 c)', p1=patch_size, p2=patch_size)
 
     # embed the patches
     patches = jnp.matmul(patches, vit_parameters['patch_embed'])
@@ -345,7 +344,6 @@ def transformer(patches, vit_parameters):
     # append class token to sequence
     cls_token = vit_parameters['cls_token']
     patches = jnp.concatenate([cls_token, patches], axis=0)
-
 
     # forward through all transformer blocks
     for layer, block_params in enumerate(vit_parameters['layers']):
@@ -363,15 +361,15 @@ def transformer(patches, vit_parameters):
 
 Let's test it by forwarding a sample image
 
-
 ```python
 sample_image = random.normal(key, (3 ,image_size, image_size))
 prediction = transformer(sample_image, vit_parameters)
 print("Output shape:", prediction.shape) # should be (num_classes,)
 
+> Output shape: (10,)
+
 ```
 
-    Output shape: (10,)
 
 
 ### Vectorized Mapping with `vmap`
