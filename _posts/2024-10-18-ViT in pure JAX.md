@@ -137,9 +137,9 @@ Now, it's time to initialize the transformer blocks. Each transformer block is m
 
 I'll do it using [Xavier intialization](https://paperswithcode.com/method/xavier-initialization), but this is not crucial.
 
+For the MLP, we need weights and biases for 2 layers.
 
 ```python
-
 def initialize_mlp(hidden_dim, mlp_dim, key):
     w1_key, w2_key = random.split(key)
 
@@ -154,8 +154,11 @@ def initialize_mlp(hidden_dim, mlp_dim, key):
     b2 = jnp.zeros(hidden_dim)
 
     return w1, b1, w2, b2
+```
 
+For attention, we need query, key, and value weights for multiple heads.
 
+```python
 def initialize_attention(hidden_dim, num_heads, key):
     q_key, k_key, v_key = random.split(key, 3)
 
@@ -173,8 +176,10 @@ def initialize_attention(hidden_dim, num_heads, key):
     v_b = jnp.zeros(fan_out)
 
     return q_w, k_w, v_w, q_b, k_b, v_b
+```
 
-
+For layer normalization, we need scaling factors (gamma) and shifting biases (beta), initialized to ones and zeros respectively.
+```python
 def initialize_layer_norm(hidden_dim):
     gamma = jnp.ones(hidden_dim)
     beta = jnp.zeros(hidden_dim)
@@ -208,12 +213,11 @@ vit_parameters['final_layer_norm'] = final_layer_norm_params
 
 ### The Model is Just a Function
 
-One thing we quickly notice about JAX is that everything is a function — including models. So once we’ve got our parameters ready, we’ll write the forward pass as a function. The ViT function will loop through a series of transformer blocks.
+One thing we quickly notice about JAX is that everything is a function — including models. This is very different from torch, where we usually look at the model as a composition of objects or submodules. So once we’ve got our parameters ready, we’ll write the forward pass as a *just* a function.  The ViT function will take the ViT parameters and an image as input.
 
-Here we come to another special feature o JAX: parallelization. We'll just code the model as if there were no batch dimension and then use `vmap` to automagically handle batches. This is a great improvement as we don't have to reason in one additional dimension and there will be no need for stuff like `batch,sequence,dim = input.shape` like in torch.
+Before writing the actual code for the ViT, we come to another special feature o JAX: *parallelization* with `vmap.` Thanks to this, we'll just code the model as if there were no batch dimension and then use `vmap` to automagically handle batches. This is a great improvement as we don't have to reason in one additional dimension and there will be no need for stuff like `batch,sequence,dim = input.shape` (unlike in torch.)
 
-So from now on, forget about batching.
-
+So from now on, forget about the batch dimension.
 
 
 ```python
@@ -232,9 +236,11 @@ def softmax(x, axis=-1):
 
 Now, the real "logic" of the model. Don't forget that each block is nothing but a *function* over the **model parameters** and an **input**.
 
+I won't explain each block in detail, as this is pretty standard and there is plenty of material out there to learn how a transformer works.
+
+For the MLP, we just perform an up and down projection with a Relu activation function in the middle.
 
 ```python
-
 def mlp(x, mlp_params):
 
     # unpack the parameters
@@ -245,8 +251,11 @@ def mlp(x, mlp_params):
     down_proj = jnp.matmul(up_proj, w2) + b2
 
     return down_proj
+```
 
+Self attention, the only catch here is to project into multiple heads.
 
+```python
 def self_attention(x, attn_params):
 
     # unpack the parameters
@@ -258,7 +267,7 @@ def self_attention(x, attn_params):
     # project the input into the query, key and value spaces
     q = jnp.matmul(x, q_w) + q_b
     k = jnp.matmul(x, k_w) + k_b
-    v = jnp.matmul(x, v_w)  + v_b
+    v = jnp.matmul(x, v_w) + v_b
 
 
     # reshape to have heads
@@ -275,16 +284,23 @@ def self_attention(x, attn_params):
     output = output.reshape(n, d_k)
 
     return output
+```
 
+Well...
 
+```python
 def layer_norm(x, layernorm_params):
     # a simple layer norm
     gamma, beta = layernorm_params
     mean = jnp.mean(x, axis=-1, keepdims=True)
     var = jnp.var(x, axis=-1, keepdims=True)
     return gamma * (x - mean) / jnp.sqrt(var + 1e-6) + beta
+```
 
 
+Finally, we can assemble attention and mlps into a transformer block!
+
+```python
 def transformer_block(inp, block_params):
 
     # unpack the parameters
@@ -301,14 +317,17 @@ def transformer_block(inp, block_params):
     x = x + skip
 
     return x
-
-
-
 ```
 
-Now we have all the components, let's stack them in a transformer.
-In order to transform an image into a set of tokens, we use [einops](https://einops.rocks/), which offers a highly expressive interface to reshape tensors.
+And stack stack them to form a transformer.
+In order to transform an image into a set of tokens, we use [einops](https://einops.rocks/), which offers a highly expressive interface to reshape tensors. Another way would be applying convolutions but here we are just using bare JAX code so we get a sequence of tokens from an image like this:
 
+```python
+from einops import rearrange
+patches = rearrange (patches, 'c (h p1) (w p2) -> (h w) (p1 p2 c)', p1=patch_size, p2=patch_size)
+```
+
+The final transformer then obtained by adding a class token and positional embeddings, and looping through the blocks.
 
 ```python
 from einops import rearrange
@@ -342,7 +361,7 @@ def transformer(patches, vit_parameters):
 
 ```
 
-Let's test by forwarding a sample image
+Let's test it by forwarding a sample image
 
 
 ```python
