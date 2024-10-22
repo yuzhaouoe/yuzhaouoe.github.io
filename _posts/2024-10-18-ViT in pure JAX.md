@@ -10,6 +10,10 @@ published: true
 
 I decided to do this for two reasons. The first reason is that, for years, I had to bear my Ph.D. advisor coming into the lab while I was happily coding my Pytorch model, slowly sneaking at my back, stare at my screen and say - with a disappointed look - "you should definitely do this in JAX". The second reason is this nice [blog post](https://neel04.github.io/my-website/blog/pytorch_rant/) from Neel Gupta.
 
+<script type="text/javascript" async
+  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
 However, every time I tried to use JAX, I ended up using Flax instead, which offers a kind of object oriented interface (similar to torch). While Flax is great, it introduces additional layers of abstraction that make it similar to Pytorch and therefore I ended up wondering: "why am I doing this?". There are other great frameworks as well, with different functionalities, like equinox (maybe closer to JAX's original nature), but they always add "another layer".
 
 This time, I wanted to take a taste of **bare JAX** and avoid external libraries or abstractions. In this implementation, I’ve built a basic Vision Transformer entirely from scratch. Although it may not be the most efficient code, my focus is to explore JAX directly and train a small model while leveraging JAX’s core features, like `vmap` and `jit`, without any external frameworks.
