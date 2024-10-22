@@ -517,9 +517,9 @@ We now have a dictionary of gradients that mirrors the structure of our paramete
 $$ \theta_{\text{new}} = \theta_{\text{old}} - \eta \cdot \nabla_\theta L(\theta) $$
 
 Where:
-- $\theta$ is the parameter we’re updating, in our case the dictionary.
-- $\eta$ is the learning rate.
-- $\nabla_\theta L(\theta)$ is the gradient of the loss with respect to the parameter, in our case the gradients dictionary.
+- $$ \theta $$ is the parameter we’re updating, in our case the dictionary.
+- $$ \eta $$  is the learning rate.
+- $$ \nabla_\theta L(\theta) $$ is the gradient of the loss with respect to the parameter, in our case the gradients dictionary.
 
 JAX has some great libraries for optimization, like `optax`, but for simplicity, we’ll just manually update the parameters using vanilla SGD. Notice that to do this we'd have to go throught the dictionary and update all values that have the same key. Fortunately, JAX has a function that does that for us: `jax.tree.map`.
 
