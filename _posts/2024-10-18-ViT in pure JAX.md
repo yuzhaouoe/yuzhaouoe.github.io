@@ -193,7 +193,6 @@ for i in range(num_layers):
     vit_parameters['layers'].append((mlp_params, attn_params, ln1_params, ln2_params))
 
 # we also have a final layer norm outside the loop
-final_layer_norm_key, key = random.split(key)
 final_layer_norm_params = initialize_layer_norm(hidden_dim)
 vit_parameters['final_layer_norm'] = final_layer_norm_params
 ```
@@ -206,12 +205,12 @@ Finally, we can now write the code for the transformer encoder!
 One thing we quickly notice about JAX is that everything is a function — including models. This is very different from torch, where we usually look at the model as a composition of objects (`nn.Module`s). So we’ll write the forward pass as  *just* a function. The ViT function will take the ViT parameters and an image as input, that is:
 
 ```python
-prediction = vit_function(vit_parameters, imnage)
+prediction = vit_function(vit_parameters, image)
 ```
 
 As we can see, the parameters are "outside" of the model.
 
-Before writing the actual code for the ViT, we come to another special feature o JAX: *parallelization* with `vmap.` Thanks to this, we'll just pretend there is no batch dimension and then use `vmap` to automagically handle batches. This is a great improvement as we don't have to reason in one additional dimension and there will be no need for stuff like `batch,sequence,dim = input.shape` (unlike torch.) So from now on, forget about the batch dimension.
+Before writing the actual code for the ViT, we come to another special feature o JAX: *parallelization*. Thanks to JAX native `vmap` function, we'll just pretend there is no batch dimension and then use `vmap` to automagically handle batches. This is a great improvement as we don't have to reason in one additional dimension and there will be no need for stuff like `batch,sequence,dim = input.shape` (unlike torch.) So from now on, forget about the batch dimension.
 
 Don't forget that each block is nothing but a *function* over the **model parameters** and an **input**.
 
@@ -293,7 +292,7 @@ def transformer_block(inp, block_params):
     return x
 ```
 
-In order to transform an image into a set of tokens, we use [einops](https://einops.rocks/), which offers a highly expressive interface to reshape tensors. Another way would be applying convolutions but here we are just using bare JAX code so we get a sequence of tokens from an image like this:
+We can now stack the transformer blocks in a transformer encoder, we just need one more preparation step to transform an input image into a sequence of patches. To do that, we use [einops](https://einops.rocks/), which offers a highly expressive interface to reshape tensors. Another way would be applying convolutions but here we are just using bare JAX code so we get a sequence of tokens from an image like this:
 
 ```python
 from einops import rearrange
@@ -344,6 +343,8 @@ print("Output shape:", prediction.shape) # should be (num_classes,)
 
     Output shape: (10,)
 
+As you may have noticed, the random input is just an image without a batch dimension. Let's see how we can add a batch dimension without modifying the code.
+
 ### Vectorized Mapping with `vmap`
 
 As anticipated, before jumping into training, we'll look at one of the coolest features JAX offers: `vmap`. This allows you to vectorize your functions, meaning you can apply them over batches of data without writing explicit loops. In a way, it’s like automatic batching. You write a function that works on a single example, and `vmap` will apply it to all examples in a batch in one go.
@@ -355,8 +356,6 @@ batched_fn = jax.vmap(single_image_fn)
 ```
 
 This can come in handy when applying the model over a batch of data. This means that we can run one pass of our transformer over a batch of images very easily. Let's try:
-
-
 
 ```python
 bsize = 5
@@ -377,6 +376,8 @@ print("Prediction shape:", prediction.shape)
 
     Prediction shape: (5, 10)
 
+
+Actually, `vmap` can do way more than this. I recommend this [blog](https://jiayiwu.me/blog/2021/04/05/learning-about-jax-axes-in-vmap.html) for an overview.
 
 ### Loss Function
 
@@ -468,7 +469,7 @@ print("Accuracy before training", accuracy)
 
 ### Training and Just in Time compilation
 
-Before we dive into training, let’s talk about `jit`. One of JAX’s biggest selling points is its ability to automatically compile and optimize your code using just-in-time (JIT) compilation. With JAX, you can wrap your functions in `jax.jit()` to make them faster by turning them into optimized code. It’s a one-liner and can massively speed up your training loop. In essence, `jit` lets you write Python code, and JAX will magically optimize it behind the scenes. It’s not even hard to use, so there’s no reason *not* to take advantage of it!
+Before we dive into training, we meet another cool feature of JAX: `jit`, that is, just in time compilation. One of JAX’s biggest selling points is its ability to automatically compile and optimize your code using just-in-time (JIT) compilation. With JAX, you can wrap your functions in `jax.jit()` to make them faster by turning them into optimized code. It’s a one-liner and can massively speed up your training loop. In essence, `jit` lets you write Python code, and JAX will magically optimize it behind the scenes. It’s not even hard to use, so there’s no reason *not* to take advantage of it!
 
 Here’s how you can JIT-compile your training step:
 
