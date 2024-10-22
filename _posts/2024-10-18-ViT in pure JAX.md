@@ -655,3 +655,4 @@ for epoch in range(num_epochs):
 
 
 Hope you enjoyed this, please reach me at https://alessiodevoto.github.io/ if you have any questions or find inconsistencies! .
+Thanks [Luigi](https://luigisigillo.github.io/) for reviewing this!
