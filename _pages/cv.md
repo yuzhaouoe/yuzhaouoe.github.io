@@ -72,6 +72,10 @@ Liceo Classico Tito Lucrezio Caro, Rome. Final Mark: 100/100  *[2011 - 2016]*
 
 
 ## Publications
+- [Steering Knowledge Selection Behaviours in LLMs via SAE-Based Representation Engineering](https://arxiv.org/abs/2410.15999), 2024
+
+- [Analysing the Residual Stream of Language Models Under Knowledge Conflicts ](https://arxiv.org/abs/2410.16090), 2024
+
 - [Adaptive Layer Selection for Efficient Vision Transformer Fine-Tuning](https://arxiv.org/abs/2408.08670), 2024
 
 - [A Simple and Effective  $$ L_2 $$ Norm-Based Strategy for KV Cache Compression](https://arxiv.org/abs/2406.11430), 2024

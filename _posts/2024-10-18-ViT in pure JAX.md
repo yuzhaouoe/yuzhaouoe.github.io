@@ -21,8 +21,8 @@ This time, I wanted to take a taste of **bare JAX** and avoid external libraries
 I will cover the following topics: 
 
 1. Initialization of the weights (in pure JAX it can take a while)
-2. Coding the ViT logic and parallelization `jax.vmap`
-3. Training with just in time `jax.jit`
+2. Coding the ViT logic and parallelization (with `jax.vmap`)
+3. Training with just in time (with `jax.jit`)
 
 ✋ If you are not interested in model initialization, you can just skip to the core part where we implement the [model and train it](https://alessiodevoto.github.io/ViT-in-pure-JAX/#the-model-is-just-a-function).
 
@@ -106,33 +106,17 @@ vit_parameters = {
 
 We now need to initialize each set of weights separately. Again, we could use a library for this, like optax, but we want to go through the process manually to better understand what's happening under the hood.
 
-Let's first initialize class token, patch_embed, positional_encoding and head.
-
+We initialize the class token with all zeros:
 ```python
 import jax.numpy as jnp # this is what we use to manipulate tensors in JAX. It is supers similar to numpy
 
 # for the class token, we just need a single vector of the same size as a token
 cls_token = jnp.zeros((1,hidden_dim))
 vit_parameters['cls_token'] = cls_token
-
-# for the patch embedding, we need to consider each patch and 3 channels and project it into the hidden dimension
-patch_embed_key, key = random.split(key)
-patch_embed = random.normal(patch_embed_key, ((3 * patch_size * patch_size), hidden_dim)) 
-vit_parameters['patch_embed'] = patch_embed
-
-# the positional encoding is just a value we add to each patch in the image
-pos_enc_key, key = random.split(key)
-pos_enc = random.normal(pos_enc_key, (num_patches,  hidden_dim)) 
-vit_parameters['positional_encoding'] = pos_enc
-
-# The head will consider only the class token and project it into the number of classes
-head_key, key = random.split(key)
-head_params = random.normal(head_key, (hidden_dim, num_classes)) * jnp.sqrt(6.0 / (hidden_dim))
-head_bias = jnp.zeros(num_classes)
-vit_parameters['head'] = (head_params, head_bias)
 ```
 
-Now, it's time to initialize the transformer blocks. Each transformer block is made up of `attention`, `mlp` and `layer normalization`. We define a function to initialize each of these components.
+For patch embedding, positional encoding, final head, and all transformer blocks we use random values (check the colab for complete code).
+Each transformer block is made up of `attention`, `mlp` and `layer normalization`. We define a function to initialize each of these components. I'll show just the mlp initializtion here for brevity.
 
 I'll do it using [Xavier intialization](https://paperswithcode.com/method/xavier-initialization), but this is not crucial and you can just use a random normal.
 
@@ -152,36 +136,6 @@ def initialize_mlp(hidden_dim, mlp_dim, key):
     b2 = jnp.zeros(hidden_dim)
 
     return w1, b1, w2, b2
-```
-
-For attention, we need query, key, and value weights for multiple heads.
-```python
-def initialize_attention(hidden_dim, num_heads, key):
-    q_key, k_key, v_key = random.split(key, 3)
-
-    # Limit for Xavier uniform
-    fan_in = hidden_dim
-    fan_out = head_dim * num_heads
-    limit = jnp.sqrt(6.0 / (fan_in + fan_out))
-
-    # Random weights from uniform distribution
-    q_w = random.uniform(q_key, (fan_in, fan_out), minval=-limit, maxval=limit)
-    q_b = jnp.zeros(fan_out)
-    k_w = random.uniform(k_key, (fan_in, fan_out), minval=-limit, maxval=limit)
-    k_b = jnp.zeros(fan_out)
-    v_w = random.uniform(v_key, (fan_in, fan_out), minval=-limit, maxval=limit)
-    v_b = jnp.zeros(fan_out)
-
-    return q_w, k_w, v_w, q_b, k_b, v_b
-```
-
-For layer normalization, we need scaling factors (gamma) and shifting biases (beta), initialized to ones and zeros respectively.
-```python
-def initialize_layer_norm(hidden_dim):
-    gamma = jnp.ones(hidden_dim)
-    beta = jnp.zeros(hidden_dim)
-    return gamma, beta
-
 ```
 
 We are now ready to initialize all the weights in each transformer layer! Let's create a set of parameters for each layer and store them in our dictionary.
@@ -209,7 +163,7 @@ Finally, we can now write the code for the transformer encoder!
 One thing we quickly notice about JAX is that everything is a function — including models. This is very different from torch, where we usually look at the model as a composition of objects (`nn.Module`s). So we’ll write the forward pass as  *just* a function. The ViT function will take the ViT parameters and an image as input, that is:
 
 ```python
-prediction = vit_function(vit_parameters, image)
+prediction = vit_function(image, vit_parameters)
 ```
 
 As we can see, the parameters are "outside" of the model.
@@ -220,7 +174,7 @@ Don't forget that each block is nothing but a *function* over the **model parame
 
 I won't explain each block in detail, as this is pretty standard and there is plenty of material out there to learn how a transformer works.
 
-For the MLP, we just perform an up and down projection with a Relu activation function in the middle.
+For the MLP, we just perform an up and down projection with a Relu activation function in the middle. Notice that we will get the input parameters from the dictionary we created earlier.
 ```python
 def mlp(x, mlp_params):
 
@@ -240,9 +194,7 @@ def self_attention(x, attn_params):
 
     # unpack the parameters
     q_w, k_w, v_w, q_b, k_b, v_b = attn_params
-
-    # n and d_k are the sequence length of the input and the hidden dimension
-    n, d_k = x.shape
+    n, d_k = x.shape   # n and d_k are the sequence length of the input and the hidden dimension
 
     # project the input into the query, key and value spaces
     q = jnp.matmul(x, q_w) + q_b
@@ -261,18 +213,7 @@ def self_attention(x, attn_params):
     # output projection
     output = jnp.matmul(attention_weights_heads, v)
     output = output.reshape(n, d_k)
-
     return output
-```
-
-Layer normalization, no need to explain here.
-```python
-def layer_norm(x, layernorm_params):
-    # a simple layer norm
-    gamma, beta = layernorm_params
-    mean = jnp.mean(x, axis=-1, keepdims=True)
-    var = jnp.var(x, axis=-1, keepdims=True)
-    return gamma * (x - mean) / jnp.sqrt(var + 1e-6) + beta
 ```
 
 
@@ -286,33 +227,38 @@ def transformer_block(inp, block_params):
     # attention
     x = layer_norm(inp, ln1_params)
     x = self_attention(x, attn_params)
-    res = x + inp
+    res = x + inp # skip connection
 
     # mlp
     x = layer_norm(res, ln2_params)
     x = mlp(x, mlp_params)
     x = x + res
-
     return x
 ```
 
-We can now stack the transformer blocks in a transformer encoder, we just need one more preparation step to transform an input image into a sequence of patches. To do that, we use [einops](https://einops.rocks/), which offers a highly expressive interface to reshape tensors. Another way would be applying convolutions but here we are just using bare JAX code so we get a sequence of tokens from an image like this:
+Before feeding the model with an image, we need one more additional step to transform an input image into a sequence of patches. To do that, we use [einops](https://einops.rocks/), which offers a highly expressive interface to reshape tensors. Another way would be applying convolutions but here we are just using bare JAX code so we get a sequence of tokens from an image like this:
 
 ```python
 from einops import rearrange
 patches = rearrange (image, 'c (h p1) (w p2) -> (h w) (p1 p2 c)', p1=patch_size, p2=patch_size)
 ```
 
-The final transformer is then obtained by adding a class token and positional embeddings, and looping through a stack of blocks.
+The final transformer then works by:
+1. reshaping the image into patches
+2. projecting patches into tokens
+3. adding a class token and positional embeddings
+4. looping through a stack of transformer blocks
+5. applying the final classification head
+
+Let's do this:
 
 ```python
-from einops import rearrange
 def transformer(image, vit_parameters):
 
     # reshape image from c,h,w -> num_patches, patch_size*patch_size
     patches = rearrange (image, 'c (h p1) (w p2) -> (h w) (p1 p2 c)', p1=patch_size, p2=patch_size)
 
-    # embed the patches
+    # embed the patches into tokens
     patches = jnp.matmul(patches, vit_parameters['patch_embed'])
 
     # add positional encoding
@@ -333,7 +279,6 @@ def transformer(image, vit_parameters):
     patches = patches[0, :]
     logits = jnp.matmul(patches, vit_parameters['head'][0]) + vit_parameters['head'][1]
     return logits
-
 ```
 
 Let's test it on a random input:
@@ -342,7 +287,6 @@ Let's test it on a random input:
 sample_image = random.normal(key, (3 ,image_size, image_size))
 prediction = transformer(sample_image, vit_parameters)
 print("Output shape:", prediction.shape) # should be (num_classes,)
-
 ```
 
     Output shape: (10,)
