@@ -77,7 +77,7 @@ key = random.PRNGKey(42)
 a_tensor = random.normal(key, tensor_shape)
 ```
 
-This is great for ML practitioners, and you know what I'm talking about if you ever had to use [ and ended up with reproducibility issues](https://neel04.github.io/my-website/blog/pytorch_rant/#seeding). The main reason for JAX explicitly tracking the random keys without using a global random state is that this would compromise the execution of parallel code, that is one of the main perks of JAX. You can read more about randomness in JAX [here](https://jax.readthedocs.io/en/latest/jax.random.html).
+This is great for ML practitioners, and you know what I'm talking about if you ever had to use [torch random seeding and ended up with reproducibility issues](https://neel04.github.io/my-website/blog/pytorch_rant/#seeding). The main reason for JAX explicitly tracking the random keys without using a global random state is that this would compromise the execution of parallel code, that is one of the main perks of JAX. You can read more about randomness in JAX [here](https://jax.readthedocs.io/en/latest/jax.random.html).
 
 Let's see what parameters we need for our ViT. Here is the list:
 
@@ -116,9 +116,7 @@ vit_parameters['cls_token'] = cls_token
 ```
 
 For patch embedding, positional encoding, final head, and all transformer blocks we use random values (check the colab for complete code).
-Each transformer block is made up of `attention`, `mlp` and `layer normalization`. We define a function to initialize each of these components. I'll show just the mlp initializtion here for brevity.
-
-I'll do it using [Xavier intialization](https://paperswithcode.com/method/xavier-initialization), but this is not crucial and you can just use a random normal.
+Each transformer block is made up of `attention`, `mlp` and `layer normalization`. We define a function to initialize each of these components. I'll show just the mlp initialization here for brevity. I'll do it using [Xavier intialization](https://paperswithcode.com/method/xavier-initialization), but this is not crucial and you can just use a random normal.
 
 For the MLP, we need weights and biases for 2 layers.
 ```python
@@ -166,14 +164,9 @@ One thing we quickly notice about JAX is that everything is a function — inclu
 prediction = vit_function(image, vit_parameters)
 ```
 
-As we can see, the parameters are "outside" of the model.
+As we can see, the parameters are "outside" of the model. Before writing the actual code for the ViT, we come to another special feature o JAX: *parallelization*. Thanks to JAX native `vmap` function, we'll just pretend there is no batch dimension and then use `vmap` to automagically handle batches. This is a great improvement as we don't have to reason in one additional dimension and there will be no need for stuff like `batch,sequence,dim = input.shape` (unlike torch.) So from now on, we'll just ignore the batch dimension.
 
-Before writing the actual code for the ViT, we come to another special feature o JAX: *parallelization*. Thanks to JAX native `vmap` function, we'll just pretend there is no batch dimension and then use `vmap` to automagically handle batches. This is a great improvement as we don't have to reason in one additional dimension and there will be no need for stuff like `batch,sequence,dim = input.shape` (unlike torch.) So from now on, forget about the batch dimension.
-
-Don't forget that each block is nothing but a *function* over the **model parameters** and an **input**.
-
-I won't explain each block in detail, as this is pretty standard and there is plenty of material out there to learn how a transformer works.
-
+Don't forget that each transformer block is nothing but a *function* over the **model parameters** and an **input**.
 For the MLP, we just perform an up and down projection with a Relu activation function in the middle. Notice that we will get the input parameters from the dictionary we created earlier.
 ```python
 def mlp(x, mlp_params):
@@ -188,10 +181,9 @@ def mlp(x, mlp_params):
     return down_proj
 ```
 
-Self attention, the only catch here is to project into multiple heads and back.
+Now self attention, the only catch here is to project into multiple heads and then concatenate back
 ```python
 def self_attention(x, attn_params):
-
     # unpack the parameters
     q_w, k_w, v_w, q_b, k_b, v_b = attn_params
     n, d_k = x.shape   # n and d_k are the sequence length of the input and the hidden dimension
@@ -216,7 +208,6 @@ def self_attention(x, attn_params):
     return output
 ```
 
-
 Finally, we can assemble attention and mlps into a transformer block.
 ```python
 def transformer_block(inp, block_params):
@@ -236,25 +227,23 @@ def transformer_block(inp, block_params):
     return x
 ```
 
-Before feeding the model with an image, we need one more additional step to transform an input image into a sequence of patches. To do that, we use [einops](https://einops.rocks/), which offers a highly expressive interface to reshape tensors. Another way would be applying convolutions but here we are just using bare JAX code so we get a sequence of tokens from an image like this:
+Before feeding the first image to the model, we need one more additional step to transform an input image into a sequence of patches. To do that, we use [einops](https://einops.rocks/), which offers a highly expressive interface to reshape tensors. Another way would be applying convolutions but here we are just using bare JAX code so we get a sequence of tokens from an image like this:
 
 ```python
 from einops import rearrange
 patches = rearrange (image, 'c (h p1) (w p2) -> (h w) (p1 p2 c)', p1=patch_size, p2=patch_size)
 ```
-
-The final transformer then works by:
+With this, we are ready to go! The final transformer then works by:
 1. reshaping the image into patches
 2. projecting patches into tokens
 3. adding a class token and positional embeddings
 4. looping through a stack of transformer blocks
 5. applying the final classification head
 
-Let's do this:
+Let's implement these steps:
 
 ```python
 def transformer(image, vit_parameters):
-
     # reshape image from c,h,w -> num_patches, patch_size*patch_size
     patches = rearrange (image, 'c (h p1) (w p2) -> (h w) (p1 p2 c)', p1=patch_size, p2=patch_size)
 
