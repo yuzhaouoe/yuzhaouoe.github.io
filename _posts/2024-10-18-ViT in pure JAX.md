@@ -29,7 +29,7 @@ I will cover the following topics:
 You can also <a href="https://colab.research.google.com/drive/1wBA1UUde72yMDvZ7ITS8cFAx90HDwD5D#scrollTo=SUBw2ZtVN7Lr" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
 
 ###  Vision Transfomer 
-If you are not familiar with the Vision Transformer (ViT) architecture, you can take a look [here](https://arxiv.org/abs/2010.11929). In short, ViTs split images into patches, and treat patches as tokens (like words in NLP models), processing them using transformer layers with bidirectional (non masked) attention. In this post, we’ll build a small ViT that can train on the Imagenette dataset, and you can even run it on your local machine.
+In the following, I assume you are already familiar with the Vision Transformer architecture. If you are not, you can take a look [here](https://arxiv.org/abs/2010.11929). In short, ViTs split images into patches, and treat patches as tokens (like words in NLP models), processing them using transformer layers with bidirectional (non masked) attention. In this post, we’ll build a small ViT that can train on the Imagenette dataset, and you can even run it on your local machine.
 
 
 Speaking of GPUs, JAX offers seamless handling of hardware acceleration. It automatically detects and utilizes available GPUs/TPUs without requiring explicit code changes.
@@ -121,7 +121,7 @@ Each transformer block is made up of `attention`, `mlp` and `layer normalization
 For the MLP, we need weights and biases for 2 layers.
 ```python
 def initialize_mlp(hidden_dim, mlp_dim, key):
-    w1_key, w2_key = random.split(key)
+    w1_key, w2_key = random.split(key) # get new random keys from the one provided
 
     # Xavier uniform limit for w1 and w2
     limit = jnp.sqrt(6.0 / (hidden_dim + mlp_dim))
@@ -654,5 +654,6 @@ for epoch in range(num_epochs):
     
 
 
-Hope you enjoyed this, please reach me at https://alessiodevoto.github.io/ if you have any questions or find inconsistencies! .
-Thanks [Luigi](https://luigisigillo.github.io/) for reviewing this!
+Hope you enjoyed this, please reach me at https://alessiodevoto.github.io/ if you have any questions or find inconsistencies!
+
+Thanks [Luigi](https://luigisigillo.github.io/) and [Jary](https://jarypomponi.com/) for reviewing this!
