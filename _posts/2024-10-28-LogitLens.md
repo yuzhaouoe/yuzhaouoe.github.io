@@ -1,4 +1,13 @@
-## LogitLens from scratch with Huggingface transformers
+---
+layout: single
+classes: wide
+author_profile: true
+title: LogitLens from scratch (with Hugging Face Transformers)
+seo_title: Implementation of LogitLens explainability method from scratch, without any interpretability libraries.
+
+published: true
+---
+
 In this short tutorial, we'll implement LogitLens to inspect the inner representations of language models (LLMs). [LogitLens](https://www.alignmentforum.org/posts/AcKRB8wDpdaN6v6ru/interpreting-gpt-the-logit-lens) is a straightforward interpretability method that applies the language model head, or "unembedding matrix," at each layer to examine how internal representations change as the model processes inputs.
 
 The core idea behind LogitLens is to apply the language model's output layer (also known as the "unembedding matrix") to the hidden states at each layer of the transformer. This allows us to see how the model's internal representations change as the input progresses through the network. Surprisingly, the model often acquires a significant amount of semantic understanding in the earlier layers of the transformer. By inspecting the predicted tokens at each layer, we can observe how the model's understanding of the input evolves.
