@@ -15,7 +15,7 @@ The core idea behind LogitLens is to apply the language model's output layer (al
 > **Disclaimer**: ✋ If you're looking for advanced interpretability tools, there are plenty of powerful libraries out there. But here, we're going back to basics because it's always cool to understand how things work under the hood.
 
 
-You can also <a href="https://colab.research.google.com/drive/1wBA1UUde72yMDvZ7ITS8cFAx90HDwD5D#scrollTo=SUBw2ZtVN7Lr" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
+You can also <a href="https://drive.google.com/file/d/1nTGbjz4AK7QZqq5BgzQozqHcjpIAndCG" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
 
 We’ll use `Microsoft Phi-1.5 `here since it's a small, open model. Feel free to swap in another Hugging Face model.
 
