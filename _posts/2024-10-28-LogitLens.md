@@ -8,11 +8,11 @@ seo_title: Implementation of LogitLens explainability method from scratch, witho
 published: true
 ---
 
-In this short tutorial, we'll implement LogitLens to inspect the inner representations of language models (LLMs). [LogitLens](https://www.alignmentforum.org/posts/AcKRB8wDpdaN6v6ru/interpreting-gpt-the-logit-lens) is a straightforward interpretability method that applies the language model head, or "unembedding matrix," at each layer to examine how internal representations change as the model processes inputs.
+In this short tutorial, we'll implement LogitLens to inspect the inner representations of a pre-trained Large Language Model. [LogitLens](https://www.alignmentforum.org/posts/AcKRB8wDpdaN6v6ru/interpreting-gpt-the-logit-lens) is a straightforward yet effective interpretability method.
 
-The core idea behind LogitLens is to apply the language model's output layer (also known as the "unembedding matrix") to the hidden states at each layer of the transformer. This allows us to see how the model's internal representations change as the input progresses through the network. Surprisingly, the model often acquires a significant amount of semantic understanding in the earlier layers of the transformer. By inspecting the predicted tokens at each layer, we can observe how the model's understanding of the input evolves.
+The core idea behind LogitLens is to apply the language model's output layer (also known as the "unembedding matrix" or "language modeling head") to the hidden states at each layer of the transformer. This allows us to see how the model's internal representations change as the input progresses through the network. Surprisingly, the model often acquires a significant amount of semantic understanding in the earlier layers of the transformer. By inspecting the predicted tokens at each layer, we can observe how the model's understanding of the input evolves.
 
-> **Disclaimer**: ✋ If you're looking for advanced interpretability tools, there are plenty of powerful libraries out there. But here, we're going back to basics because it's always cool to understand how things work under the hood.
+> **Disclaimer**: ✋ If you're looking for advanced interpretability tools, there are plenty of powerful libraries out there. But here, we're going back to basics and do this from scratch because it's always cool to understand how things work under the hood.
 
 
 You can also <a href="https://drive.google.com/file/d/1nTGbjz4AK7QZqq5BgzQozqHcjpIAndCG" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
@@ -70,7 +70,6 @@ original_input_tokens
     ['<bos>', 'The', ' quick', ' brown', ' fox', ' jumps', ' over', ' the', ' lazy']
 
 
-
 Now, let’s feed the input into the model to get the next token prediction along with all the hidden states. Fortunately, the model's forward method provides an option to return its hidden states.
 
 ```python
@@ -82,10 +81,32 @@ with torch.no_grad():
 print("Logits shape: ", outputs["logits"].shape)
 ```
 
-    Logits shape:  torch.Size([1, 9, 51200])
+    Logits shape:  torch.Size([1, 9, 51200]) # (batch, sequence len, vocab size)
+
+The logits have been already projected into the vocabulary space. Hidden states on the other hand are still "raw" token representations.
+
+```python
+hidden_states = outputs.hidden_states
+print("Number of model layers", len(hidden_states))
+print("Hidden states for first layer", hidden_states[0].shape)
+```
+    Number of model layers:  25
+    Hidden states for first layer:  torch.Size([1, 9, 2048])
+
+Each layer in the model produces a hidden state, where the last dimension represents the embedding size. 
+
+By applying the language modeling head (or unembedding matrix) to the hidden state at any layer, we can generate 'early' logits—predictions from intermediate representations. While the model isn't explicitly trained to produce meaningful logits at these layers, we'll see that it naturally starts embedding token-level information along the way.
+
+We can apply the head like this:
+
+```python
+logits_at_second_layer = model.lm_head(hidden_states[2])
+print("Logits at second layer shape: ", logits_at_second_layer.shape)
+```
+    Logits at second layer shape:  torch.Size([1, 9, 51200])
 
 
-The output will contain the hidden states computed at each layer. We now want to access the hidden state at each layer and apply the language modeling head (aka unembedding matrix) to decode the hidden representation of the tokens.
+We now want to access the hidden state at each layer,  apply the language modeling head to get the logits, and finally decode the logits into tokens.
 
 ```python
 hidden_states = outputs.hidden_states
@@ -94,8 +115,6 @@ hidden_states = outputs.hidden_states
 logitlens = []
 
 for i, hidden_state in enumerate(hidden_states):
-    print(f"Layer {i}")
-
     # apply the language model head to the hidden states
     logits = model.lm_head(hidden_state)
 
@@ -104,62 +123,39 @@ for i, hidden_state in enumerate(hidden_states):
 
     # convert the token ids to tokens
     predicted_tokens = tokenizer.convert_ids_to_tokens(predicted_token_ids[0], skip_special_tokens=False)
-    print(remove_g(predicted_tokens))
+    predicted_tokens = remove_g(predicted_tokens)
 
-    # append the predicted tokens to the list
-    logitlens.append(remove_g(predicted_tokens))
+    # append the predicted tokens to the list for later
+    logitlens.append(predicted_tokens)
+
+    print(f"Layer {i}: {predicted_tokens}")
 ```
 
-    Layer 0
-    ['-', ' S', '-', '-', '-', '-', '-', ' S', '-']
-    Layer 1
-    ['ed', 'oret', 'est', 'ies', 'es', 'uit', ' the', ' same', ' double']
-    Layer 2
-    ['import', 'oret', 'est', 'ies', 'es', 'uits', ' time', ' same', ' part']
-    Layer 3
-    ['import', 'orem', 'est', 'arf', 'es', 'es', ' all', ' entire', ' man']
-    Layer 4
-    [' realise', 'orem', 'est', 'arf', 'es', 'uit', 'worked', ' entire', ' man']
-    Layer 5
-    [' realise', 'orem', 'est', 'arf', 'es', 'uit', 'worked', ' entire', ' man']
-    Layer 6
-    [' realise', 'orem', 'est', 'arf', 'es', 'uit', 'kill', 'ses', ' man']
-    Layer 7
-    ['iveness', 'orem', 'est', ' fox', 'es', 'ers', ' all', ' entire', ' brown']
-    Layer 8
-    ['iveness', 'orem', 'ness', ' fox', 'es', 'ers', 'ind', ' entire', ' poor']
-    Layer 9
-    ['iveness', 'orem', 'ness', ' fox', 'es', 'ers', ' obstacles', ' entire', ' poor']
-    Layer 10
-    ['iveness', 'orem', 'ness', ' ph', 'es', 'ers', ' obstacles', ' entire', ' poor']
-    Layer 11
-    ['iveness', 'orem', ' brown', ' fox', 'es', 'ers', ' obstacles', ' entire', ' poor']
-    Layer 12
-    ['iveness', 'oret', ' brown', ' fox', 'es', ' into', ' obstacles', ' entire', ' poor']
-    Layer 13
-    ['ality', 'oret', ' brown', ' fox', 'es', ' into', ' obstacles', ' entire', ' poor']
-    Layer 14
-    ['ality', 'ory', ' brown', ' ph', 'es', ' into', ' obstacles', ' entire', ' poor']
-    Layer 15
-    ['iveness', 'ory', ' brown', ' fox', 'es', ' into', ' obstacles', ' entire', ' poor']
-    Layer 16
-    ['import', 'ory', ' brown', ' fox', 'es', ' into', ' lazy', ' entire', ' poor']
-    Layer 17
-    ['import', 'mes', ' brown', ' fox', 'es', ' over', ' the', ' lazy', ' poor']
-    Layer 18
-    ['import', ' first', ' brown', ' fox', 'es', ' over', ' the', ' lazy', ' dog']
-    Layer 19
-    [' example', ' first', ' brown', 'Ċ', 'es', ' over', ' the', ' lazy', ' dog']
-    Layer 20
-    ['ĊĊ', ' first', ' brown', 's', 'es', ' over', ' the', ' lazy', ' dog']
-    Layer 21
-    ['ing', ' first', ' brown', ' fox', 'es', ' over', ' the', ' lazy', ' dog']
-    Layer 22
-    ['Ċ', ' first', ' brown', 'Ċ', ' jumps', ' over', ' the', ' lazy', ' dog']
-    Layer 23
-    ['Ċ', 'Ċ', ' brown', ' fox', ' J', ' over', ' the', ' lazy', ' dog']
-    Layer 24
-    ['Ċ', 'ory', ' brown', ' fox', ' jumps', ' over', ' the', ' lazy', ' dog']
+    Layer 0: ['-', ' S', '-', '-', '-', '-', '-', ' S', '-']
+    Layer 1: ['ed', 'oret', 'est', 'ies', 'es', 'uit', ' the', ' same', ' double']
+    Layer 2: ['import', 'oret', 'est', 'ies', 'es', 'uits', ' time', ' same', ' part']
+    Layer 3: ['import', 'orem', 'est', 'arf', 'es', 'es', ' all', ' entire', ' man']
+    Layer 4: [' realise', 'orem', 'est', 'arf', 'es', 'uit', 'worked', ' entire', ' man']
+    Layer 5: [' realise', 'orem', 'est', 'arf', 'es', 'uit', 'worked', ' entire', ' man']
+    Layer 6: [' realise', 'orem', 'est', 'arf', 'es', 'uit', 'kill', 'ses', ' man']
+    Layer 7: ['iveness', 'orem', 'est', ' fox', 'es', 'ers', ' all', ' entire', ' brown']
+    Layer 8: ['iveness', 'orem', 'ness', ' fox', 'es', 'ers', 'ind', ' entire', ' poor']
+    Layer 9: ['iveness', 'orem', 'ness', ' fox', 'es', 'ers', ' obstacles', ' entire', ' poor']
+    Layer 10: ['iveness', 'orem', 'ness', ' ph', 'es', 'ers', ' obstacles', ' entire', ' poor']
+    Layer 11: ['iveness', 'orem', ' brown', ' fox', 'es', 'ers', ' obstacles', ' entire', ' poor']
+    Layer 12: ['iveness', 'oret', ' brown', ' fox', 'es', ' into', ' obstacles', ' entire', ' poor']
+    Layer 13: ['ality', 'oret', ' brown', ' fox', 'es', ' into', ' obstacles', ' entire', ' poor']
+    Layer 14: ['ality', 'ory', ' brown', ' ph', 'es', ' into', ' obstacles', ' entire', ' poor']
+    Layer 15: ['iveness', 'ory', ' brown', ' fox', 'es', ' into', ' obstacles', ' entire', ' poor']
+    Layer 16: ['import', 'ory', ' brown', ' fox', 'es', ' into', ' lazy', ' entire', ' poor']
+    Layer 17: ['import', 'mes', ' brown', ' fox', 'es', ' over', ' the', ' lazy', ' poor']
+    Layer 18: ['import', ' first', ' brown', ' fox', 'es', ' over', ' the', ' lazy', ' dog']
+    Layer 19: [' example', ' first', ' brown', 'Ċ', 'es', ' over', ' the', ' lazy', ' dog']
+    Layer 20: ['ĊĊ', ' first', ' brown', 's', 'es', ' over', ' the', ' lazy', ' dog']
+    Layer 21: ['ing', ' first', ' brown', ' fox', 'es', ' over', ' the', ' lazy', ' dog']
+    Layer 22: ['Ċ', ' first', ' brown', 'Ċ', ' jumps', ' over', ' the', ' lazy', ' dog']
+    Layer 23: ['Ċ', 'Ċ', ' brown', ' fox', ' J', ' over', ' the', ' lazy', ' dog']
+    Layer 24: ['Ċ', 'ory', ' brown', ' fox', ' jumps', ' over', ' the', ' lazy', ' dog']
 
 
 As you observe, the predictions refine layer-by-layer, reflecting the model's gradual understanding of the input.
@@ -214,9 +210,6 @@ logitlens = []
 entropies = []
 
 for i, hidden_state in enumerate(hidden_states):
-
-    print(f"Layer {i}")
-
     # apply the language model head to the hidden states
     logits = model.lm_head(hidden_state)
 
@@ -228,63 +221,41 @@ for i, hidden_state in enumerate(hidden_states):
 
     # convert the token ids to tokens
     predicted_tokens = tokenizer.convert_ids_to_tokens(predicted_token_ids[0], skip_special_tokens=False)
-    print(remove_g(predicted_tokens))
+    predicted_tokens = remove_g(predicted_tokens)
 
     # append the predicted tokens to the list
-    logitlens.append(remove_g(predicted_tokens))
+    logitlens.append(predicted_tokens)
     entropies.append(entropy)
+
+    print(f"Layer {i}: {predicted_tokens}")
 ```
 
-    Layer 0
-    ['-', ' S', '-', '-', '-', '-', '-', ' S', '-']
-    Layer 1
-    ['ed', 'oret', 'est', 'ies', 'es', 'uit', ' the', ' same', ' double']
-    Layer 2
-    ['import', 'oret', 'est', 'ies', 'es', 'uits', ' time', ' same', ' part']
-    Layer 3
-    ['import', 'orem', 'est', 'arf', 'es', 'es', ' all', ' entire', ' man']
-    Layer 4
-    [' realise', 'orem', 'est', 'arf', 'es', 'uit', 'worked', ' entire', ' man']
-    Layer 5
-    [' realise', 'orem', 'est', 'arf', 'es', 'uit', 'worked', ' entire', ' man']
-    Layer 6
-    [' realise', 'orem', 'est', 'arf', 'es', 'uit', 'kill', 'ses', ' man']
-    Layer 7
-    ['iveness', 'orem', 'est', ' fox', 'es', 'ers', ' all', ' entire', ' brown']
-    Layer 8
-    ['iveness', 'orem', 'ness', ' fox', 'es', 'ers', 'ind', ' entire', ' poor']
-    Layer 9
-    ['iveness', 'orem', 'ness', ' fox', 'es', 'ers', ' obstacles', ' entire', ' poor']
-    Layer 10
-    ['iveness', 'orem', 'ness', ' ph', 'es', 'ers', ' obstacles', ' entire', ' poor']
-    Layer 11
-    ['iveness', 'orem', ' brown', ' fox', 'es', 'ers', ' obstacles', ' entire', ' poor']
-    Layer 12
-    ['iveness', 'oret', ' brown', ' fox', 'es', ' into', ' obstacles', ' entire', ' poor']
-    Layer 13
-    ['ality', 'oret', ' brown', ' fox', 'es', ' into', ' obstacles', ' entire', ' poor']
-    Layer 14
-    ['ality', 'ory', ' brown', ' ph', 'es', ' into', ' obstacles', ' entire', ' poor']
-    Layer 15
-    ['iveness', 'ory', ' brown', ' fox', 'es', ' into', ' obstacles', ' entire', ' poor']
-    Layer 16
-    ['import', 'ory', ' brown', ' fox', 'es', ' into', ' lazy', ' entire', ' poor']
-    Layer 17
-    ['import', 'mes', ' brown', ' fox', 'es', ' over', ' the', ' lazy', ' poor']
-    Layer 18
-    ['import', ' first', ' brown', ' fox', 'es', ' over', ' the', ' lazy', ' dog']
-    Layer 19
-    [' example', ' first', ' brown', 'Ċ', 'es', ' over', ' the', ' lazy', ' dog']
-    Layer 20
-    ['ĊĊ', ' first', ' brown', 's', 'es', ' over', ' the', ' lazy', ' dog']
-    Layer 21
-    ['ing', ' first', ' brown', ' fox', 'es', ' over', ' the', ' lazy', ' dog']
-    Layer 22
-    ['Ċ', ' first', ' brown', 'Ċ', ' jumps', ' over', ' the', ' lazy', ' dog']
-    Layer 23
-    ['Ċ', 'Ċ', ' brown', ' fox', ' J', ' over', ' the', ' lazy', ' dog']
-    Layer 24
-    ['Ċ', 'ory', ' brown', ' fox', ' jumps', ' over', ' the', ' lazy', ' dog']
+    Layer 0: ['-', ' S', '-', '-', '-', '-', '-', ' S', '-']
+    Layer 1: ['ed', 'oret', 'est', 'ies', 'es', 'uit', ' the', ' same', ' double']
+    Layer 2: ['import', 'oret', 'est', 'ies', 'es', 'uits', ' time', ' same', ' part']
+    Layer 3: ['import', 'orem', 'est', 'arf', 'es', 'es', ' all', ' entire', ' man']
+    Layer 4: [' realise', 'orem', 'est', 'arf', 'es', 'uit', 'worked', ' entire', ' man']
+    Layer 5: [' realise', 'orem', 'est', 'arf', 'es', 'uit', 'worked', ' entire', ' man']
+    Layer 6: [' realise', 'orem', 'est', 'arf', 'es', 'uit', 'kill', 'ses', ' man']
+    Layer 7: ['iveness', 'orem', 'est', ' fox', 'es', 'ers', ' all', ' entire', ' brown']
+    Layer 8: ['iveness', 'orem', 'ness', ' fox', 'es', 'ers', 'ind', ' entire', ' poor']
+    Layer 9: ['iveness', 'orem', 'ness', ' fox', 'es', 'ers', ' obstacles', ' entire', ' poor']
+    Layer 10: ['iveness', 'orem', 'ness', ' ph', 'es', 'ers', ' obstacles', ' entire', ' poor']
+    Layer 11: ['iveness', 'orem', ' brown', ' fox', 'es', 'ers', ' obstacles', ' entire', ' poor']
+    Layer 12: ['iveness', 'oret', ' brown', ' fox', 'es', ' into', ' obstacles', ' entire', ' poor']
+    Layer 13: ['ality', 'oret', ' brown', ' fox', 'es', ' into', ' obstacles', ' entire', ' poor']
+    Layer 14: ['ality', 'ory', ' brown', ' ph', 'es', ' into', ' obstacles', ' entire', ' poor']
+    Layer 15: ['iveness', 'ory', ' brown', ' fox', 'es', ' into', ' obstacles', ' entire', ' poor']
+    Layer 16: ['import', 'ory', ' brown', ' fox', 'es', ' into', ' lazy', ' entire', ' poor']
+    Layer 17: ['import', 'mes', ' brown', ' fox', 'es', ' over', ' the', ' lazy', ' poor']
+    Layer 18: ['import', ' first', ' brown', ' fox', 'es', ' over', ' the', ' lazy', ' dog']
+    Layer 19: [' example', ' first', ' brown', 'Ċ', 'es', ' over', ' the', ' lazy', ' dog']
+    Layer 20: ['ĊĊ', ' first', ' brown', 's', 'es', ' over', ' the', ' lazy', ' dog']
+    Layer 21: ['ing', ' first', ' brown', ' fox', 'es', ' over', ' the', ' lazy', ' dog']
+    Layer 22: ['Ċ', ' first', ' brown', 'Ċ', ' jumps', ' over', ' the', ' lazy', ' dog']
+    Layer 23: ['Ċ', 'Ċ', ' brown', ' fox', ' J', ' over', ' the', ' lazy', ' dog']
+    Layer 24: ['Ċ', 'ory', ' brown', ' fox', ' jumps', ' over', ' the', ' lazy', ' dog']
+
 
 
 
