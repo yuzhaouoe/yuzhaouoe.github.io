@@ -8,9 +8,9 @@ seo_title: Implementation of LogitLens explainability method from scratch, witho
 published: true
 ---
 
-In this short tutorial, we'll implement LogitLens to inspect the inner representations of a pre-trained Large Language Model. [LogitLens](https://www.alignmentforum.org/posts/AcKRB8wDpdaN6v6ru/interpreting-gpt-the-logit-lens) is a straightforward yet effective interpretability method.
+In this short tutorial, we'll implement LogitLens to inspect the inner representations of a pre-trained `Phi-1.5`. [LogitLens](https://www.alignmentforum.org/posts/AcKRB8wDpdaN6v6ru/interpreting-gpt-the-logit-lens) is a straightforward yet effective interpretability method.
 
-The core idea behind LogitLens is to apply the language model's output layer (also known as the "unembedding matrix" or "language modeling head") to the hidden states at each layer of the transformer. This allows us to see how the model's internal representations change as the input progresses through the network. Surprisingly, the model often acquires a significant amount of semantic understanding in the earlier layers of the transformer. By inspecting the predicted tokens at each layer, we can observe how the model's understanding of the input evolves.
+The core idea behind it is to apply the language model's output layer (also known as the "unembedding matrix" or "language modeling head") to the hidden states at each layer of the transformer. This allows us to see how the model's internal representations change as the input progresses through the network. Surprisingly, the model often acquires a significant amount of semantic understanding in the earlier layers of the transformer. By inspecting the predicted tokens at each layer, we can observe how the model's understanding of the input evolves.
 
 > **Disclaimer**: ✋ If you're looking for advanced interpretability tools, there are plenty of powerful libraries out there. But here, we're going back to basics and do this from scratch because it's always cool to understand how things work under the hood.
 
@@ -55,16 +55,9 @@ print("Input tokens: ", original_input_tokens)
 
 As we can see, the tokenizer added the beggining of sentence `<bos>` token. The ugly `Ġ` represent spaces.
 
-To clean these up a bit (the `Ġ`s are really annoying):
+In the notebook you can find a function clean these up a bit (the `Ġ`s are really annoying):
 ```python
-# I really don't like the Ġ
-def remove_g(item):
-  if isinstance(item, list):
-    return [remove_g(i) for i in item]
-  else:
-    return item.replace("Ġ", " ")
-
-original_input_tokens = remove_g(original_input_tokens)
+original_input_tokens = cleanup_tokens(original_input_tokens)
 original_input_tokens
 ```
     ['<bos>', 'The', ' quick', ' brown', ' fox', ' jumps', ' over', ' the', ' lazy']
@@ -123,7 +116,7 @@ for i, hidden_state in enumerate(hidden_states):
 
     # convert the token ids to tokens
     predicted_tokens = tokenizer.convert_ids_to_tokens(predicted_token_ids[0], skip_special_tokens=False)
-    predicted_tokens = remove_g(predicted_tokens)
+    predicted_tokens = cleanup_tokens(predicted_tokens)
 
     # append the predicted tokens to the list for later
     logitlens.append(predicted_tokens)
@@ -175,7 +168,7 @@ intensities = np.ones((len(hidden_states), len(original_input_tokens)))
 # Create heatmap
 plt.figure(figsize=(20, 10))
 ax = sns.heatmap(intensities[::2],
-                annot=remove_g(logitlens)[::2],
+                annot=cleanup_tokens(logitlens)[::2],
                 fmt='',
                 cmap='Greys',
                 xticklabels=original_input_tokens,
@@ -221,7 +214,7 @@ for i, hidden_state in enumerate(hidden_states):
 
     # convert the token ids to tokens
     predicted_tokens = tokenizer.convert_ids_to_tokens(predicted_token_ids[0], skip_special_tokens=False)
-    predicted_tokens = remove_g(predicted_tokens)
+    predicted_tokens = cleanup_tokens(predicted_tokens)
 
     # append the predicted tokens to the list
     logitlens.append(predicted_tokens)
