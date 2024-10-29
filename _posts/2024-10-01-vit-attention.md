@@ -232,3 +232,4 @@ plt.tight_layout()
 
 ![](https://raw.githubusercontent.com/alessiodevoto/alessiodevoto.github.io/refs/heads/main/assets/images/bird_maps.png)
 
+Hope you liked this! If you have any suggestions/questios, feel free to drop me a message/email or visit [my page](https://alessiodevoto.github.io/) or my twitter [@devoto_alessio](https://x.com/devoto_alessio).

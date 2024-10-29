@@ -42,7 +42,7 @@ print("Input shape: ", inputs["input_ids"].shape)
     Input shape:  torch.Size([1, 9])
 
 
-In case you want to know what the input looks like, you can just decode it:
+The sentence was encoded into 9 tokens. In case you want to know what the tokens looks like, you can just decode them back:
 
 
 ```python
@@ -55,7 +55,7 @@ print("Input tokens: ", original_input_tokens)
 
 As we can see, the tokenizer added the beggining of sentence `<bos>` token. The ugly `Ġ` represent spaces.
 
-In the notebook you can find a function clean these up a bit (the `Ġ`s are really annoying):
+In the notebook you can find a function clean these up a bit (I find the `Ġ`s are really annoying):
 ```python
 original_input_tokens = cleanup_tokens(original_input_tokens)
 original_input_tokens
@@ -73,10 +73,9 @@ with torch.no_grad():
 # # print(outputs.keys())
 print("Logits shape: ", outputs["logits"].shape)
 ```
-
     Logits shape:  torch.Size([1, 9, 51200]) # (batch, sequence len, vocab size)
 
-The logits have been already projected into the vocabulary space. Hidden states on the other hand are still "raw" token representations.
+The logits have been already projected into the vocabulary space. Hidden states on the other hand are still "raw" token representations. We'll have one hiddent state vector for each model layer.
 
 ```python
 hidden_states = outputs.hidden_states
@@ -86,11 +85,11 @@ print("Hidden states for first layer", hidden_states[0].shape)
     Number of model layers:  25
     Hidden states for first layer:  torch.Size([1, 9, 2048])
 
-Each layer in the model produces a hidden state, where the last dimension represents the embedding size. 
+As we see, each layer in the model produces a hidden state. Here the last dimension represents the embedding size (not the vocbulary size). 
 
 By applying the language modeling head (or unembedding matrix) to the hidden state at any layer, we can generate 'early' logits—predictions from intermediate representations. While the model isn't explicitly trained to produce meaningful logits at these layers, we'll see that it naturally starts embedding token-level information along the way.
 
-We can apply the head like this:
+We can apply the language modeling head like this:
 
 ```python
 logits_at_second_layer = model.lm_head(hidden_states[2])
@@ -99,14 +98,9 @@ print("Logits at second layer shape: ", logits_at_second_layer.shape)
     Logits at second layer shape:  torch.Size([1, 9, 51200])
 
 
-We now want to access the hidden state at each layer,  apply the language modeling head to get the logits, and finally decode the logits into tokens.
+We now want to access the hidden state at each layer, apply the language modeling head to get the logits, and finally decode the logits into tokens.
 
 ```python
-hidden_states = outputs.hidden_states
-
-# we will store the predicted tokens at each layer here
-logitlens = []
-
 for i, hidden_state in enumerate(hidden_states):
     # apply the language model head to the hidden states
     logits = model.lm_head(hidden_state)
@@ -197,6 +191,7 @@ def entropy_from_logits(logits):
     return -torch.sum(probs * torch.log(probs), dim=-1).squeeze()
 ```
 
+Now we can run the same code as before, this time we'll also compute and store the entropies.
 
 ```python
 logitlens = []
