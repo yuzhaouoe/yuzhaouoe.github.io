@@ -12,21 +12,21 @@
 
 # theme                  : "minimal-mistakes-jekyll"
 remote_theme             : "mmistakes/minimal-mistakes"
-minimal_mistakes_skin    : "air" # "air", "aqua", "contrast", "dark", "default", "dirt", "neon", "mint", "plum", "sunrise"
+minimal_mistakes_skin    : "default" # "air", "aqua", "contrast", "dark", "default", "dirt", "neon", "mint", "plum", "sunrise"
 
 # Site Settings
 locale                   : "en-US"
-title                    : "Alessio Devoto"
+title                    : "Yu Zhao"
 title_separator          : "-"
-subtitle                 : # "Alessio's personal website"
-name                     : "Alessio Devoto"
-description              : "Alessio Devoto's PhD Data Science personal website"
-url                      : "https://alessiodevoto.github.io"
+subtitle                 : # "Yu's personal website"
+name                     : "Yu Zhao"
+description              : "Yu Zhao's personal website"
+url                      : "https://yuzhaouoe.github.io"
 baseurl                  : # "/"
-repository               : "alessiodevoto/alessiodevoto.github.io"
+repository               : "yuzhaouoe/yuzhaouoe.github.io"
 teaser                   : # path of fallback teaser image, e.g. "/assets/images/500x300.png" (immagine di default per i post)
 logo                     : # path of logo image to display in the masthead, e.g. "/assets/images/88x88.png"
-masthead_title           : "Alessio Devoto" #overrides the website title displayed in the masthead, use " " for no title
+masthead_title           : "Yu Zhao" #overrides the website title displayed in the masthead, use " " for no title
 # breadcrumbs            : false # true, false (default)
 words_per_minute         : 200
 comments:
@@ -59,7 +59,7 @@ reCaptcha:
 atom_feed:
   path                   : # blank (default) uses feed.xml
   hide                   : true #, false (default)
-search                   : true #, false (default)
+search                   : false #, false (default)
 search_full_content      : true #, false (default)
 search_provider          : google # (default), algolia, google, lunr
 lunr:
@@ -105,31 +105,29 @@ analytics:
 # Site Author
 author:
   name             : #"Alessio Devoto, PhD"
-  avatar           : "/assets/images/alessio_pp_standard.jpg"
-  bio              : "Computer Engineer <br> 
-                      PhD candidate in Data Science <br> <br> 
-                      <a href='https://classicalanthology.theclassicslibrary.com/2012/05/30/odyssey-1-1-6/'> 📖 Ἄνδρα μοι ἔννεπε, Μοῦσα, πολύτροπον <a>" 
-  location         : "La Sapienza, University of Rome <br>"
+  avatar           : "/assets/images/yuzhao-avatar.jpg"
+  bio              : "Yu Zhao" 
+  location         : "Edinburgh, Scotland, UK"
   email            : 
   links:
-    - label: "X"
+    - label: "Twitter"
       icon: "fab fa-fw fa-square-x-twitter" 
-      url: "https://x.com/devoto_alessio"
+      url: "https://x.com/yuzhaouoe"
     - label: "Email"
       icon: "fas fa-fw fa-envelope-square"
-      url: "mailto:devoto.alessio@gmail.com"
+      url: "mailto:yuzhaouoe@gmail.com"
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
-      url: "https://github.com/alessiodevoto"
+      url: "https://github.com/yuzhaouoe"
     - label: "LinkedIn"
       icon: "fab fa-fw fa-linkedin" 
-      url: "https://www.linkedin.com/in/alessio-devoto/"
+      url: "https://www.linkedin.com/in/yu-zhao-b303482b3/"
     - label: "Semantic Scholar"
       icon: "fa-solid fa-magnifying-glass"
-      url: "https://www.semanticscholar.org/author/Alessio-Devoto/2172309361"
+      url: "https://www.semanticscholar.org/author/Yu-Zhao/2155474139"
     - label: "Google Scholar"
       icon: "fa-brands fa-google-scholar"
-      url: "https://scholar.google.com/citations?user=er31rp0AAAAJ&hl"
+      url: "https://scholar.google.com/citations?user=QR0LL6gAAAAJ"
 
     #- label: "Facebook"
       #icon: "fab fa-fw fa-facebook-square"
@@ -141,10 +139,10 @@ footer:
   links:
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
-      url: "https://github.com/alessiodevoto"
+      url: "https://github.com/yuzhaouoe"
     - label: "LinkedIn"
       icon: "fab fa-fw fa-linkedin" 
-      url: "https://www.linkedin.com/in/alessio-devoto/"
+      url: "https://www.linkedin.com/in/yu-zhao-b303482b3/"
     # - label: "Twitter"
       # icon: "fab fa-fw fa-twitter-square"
       # url:

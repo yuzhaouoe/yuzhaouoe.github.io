@@ -1,8 +1,3 @@
-# main links
 main:
-  - title: "Projects"
-    url:  /activities
-  - title: "CV & Publications"
-    url: /cv
-  - title: "Entropy (Blog & Notes)"
-    url:  /blog
+  - title: "Résumé"
+    url: /assets/images/YU_ZHAO_CV_2024_October.pdf
