@@ -1,3 +1,5 @@
 main:
-  - title: "Résumé"
+  - title: "📝 Résumé"
     url: /assets/images/YU_ZHAO_CV_2024_October.pdf
+  - title: "🤗 Hugging Face"
+    url: https://huggingface.co/yuzhaouoe
