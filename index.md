@@ -12,7 +12,7 @@ seo_description: Yu Zhao is a PhD student at the University of Edinburgh.
 
 ---
 
-I am a 2nd year PhD student at the University of Edinburgh (start from Sept. 2023), a member of [EdinburghNLP](https://edinburghnlp.inf.ed.ac.uk/), supervised by [Pasquale Minervini](https://scholar.google.com/citations?user=9sk6CSgAAAAJ) and [Mirella Lapata](https://scholar.google.com/citations?user=j67B9Q4AAAAJ). My research interests lie in _foundation model pre-training_ and _scalable mechanism interpretability_. I am currently working to "open the black box" to imporve LLMs safety and enable more efficient pre-training/inference.
+I am a 2nd year PhD student at the University of Edinburgh (start from Sept. 2023), a member of [EdinburghNLP](https://edinburghnlp.inf.ed.ac.uk/), supervised by [Pasquale Minervini](https://scholar.google.com/citations?user=9sk6CSgAAAAJ) and [Mirella Lapata](https://scholar.google.com/citations?user=j67B9Q4AAAAJ). My research interests lie in _foundation model pre-training_ and _scalable mechanism interpretability_. I am currently working to "open the black box" to enable more efficient pre-training/inference.
 
 
 📌 *<font color=orange>I am now looking for internship opportunities</font>*
