@@ -15,10 +15,6 @@ seo_description: Yu Zhao is a PhD student at the University of Edinburgh.
 I am a 2nd year PhD student at the University of Edinburgh (start from Sept. 2023), a member of [EdinburghNLP](https://edinburghnlp.inf.ed.ac.uk/), supervised by [Pasquale Minervini](https://scholar.google.com/citations?user=9sk6CSgAAAAJ) and [Mirella Lapata](https://scholar.google.com/citations?user=j67B9Q4AAAAJ). My research interests lie in _foundation model pre-training_ and _scalable mechanism interpretability_. I am currently working to "open the black box" to enable more efficient pre-training/inference.
 
 
-📌 *<font color=orange>I am now looking for internship opportunities</font>*
-
-<!-- | *opening the black box for efficient training/inference* -->
-
 ### Recent Works
 
 [Steering Knowledge Selection Behaviours in LLMs via SAE-Based Representation Engineering](https://arxiv.org/abs/2410.15999)  
@@ -29,7 +25,7 @@ NAACL 2025
 **Yu Zhao**, Xiaotang Du, Giwon Hong, Aryo Pradipta Gema, Alessio Devoto, Hongru Wang, Xuanli He, Kam-Fai Wong, Pasquale Minervini  
 MINT @ NeurIPS 2024
 
-[A Simple and Effective  Norm-Based Strategy for KV Cache Compression](https://arxiv.org/abs/2406.11430)  
+[A Simple and Effective L2 Norm-Based Strategy for KV Cache Compression](https://arxiv.org/abs/2406.11430)  
 Alessio Devoto\*, **Yu Zhao**\*, Simone Scardapane, Pasquale Minervini  
 EMNLP 2024, _Oral_
 
