@@ -1,7 +1,7 @@
 <!doctype html>
 <!--
-  Minimal Mistakes Jekyll Theme 4.26.2 by Michael Rose
-  Copyright 2013-2024 Michael Rose - mademistakes.com | @mmistakes
+  Minimal Mistakes Jekyll Theme 4.27.3 by Michael Rose
+  Copyright 2013-2025 Michael Rose - mademistakes.com | @mmistakes
   Free for personal and commercial use under the MIT license
   https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE
 -->
@@ -19,7 +19,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:site_name" content="Yu Zhao">
 <meta property="og:title" content="LogitLens from scratch with Hugging Face Transformers">
-<meta property="og:url" content="http://0.0.0.0:4000/LogitLens/">
+<meta property="og:url" content="http://0.0.0.0:4007/LogitLens/">
 
 
   <meta property="og:description" content="In this short tutorial, we’ll implement LogitLens to inspect the inner representations of a pre-trained Phi-1.5. LogitLens is a straightforward yet effective interpretability method.  The core idea behind it is to apply the language model’s output layer (also known as the “unembedding matrix” or “language modeling head”) to the hidden states at each layer of the transformer. This allows us to see how the model’s internal representations change as the input progresses through the network. Surprisingly, the model often acquires a significant amount of semantic understanding in the earlier layers of the transformer. By inspecting the predicted tokens at each layer, we can observe how the model’s understanding of the input evolves.     Disclaimer: ✋ If you’re looking for advanced interpretability tools, there are plenty of powerful libraries out there. But here, we’re going back to basics and do this from scratch because it’s always cool to understand how things work under the hood.   You can also   We’ll use Microsoft Phi-1.5 here since it’s a small, open model. Feel free to swap in another Hugging Face model.  from transformers import AutoModelForCausalLM, AutoTokenizer import torch  model_id= &quot;microsoft/phi-1.5&quot;  # load the model model = AutoModelForCausalLM.from_pretrained(model_id, torch_dtype=torch.bfloat16).eval().to(device) tokenizer = AutoTokenizer.from_pretrained(model_id, add_bos_token=True, bos_token=&#39;&lt;bos&gt;&#39;, use_fast=False)  Downloading the model might take a while, so you better pick a small model :). Let’s now consider an example input sentence and tokenize it.  example = &quot;The quick brown fox jumps over the lazy&quot; inputs = tokenizer(example, return_tensors=&quot;pt&quot;).to(device)  print(&quot;Input shape: &quot;, inputs[&quot;input_ids&quot;].shape)  Input shape:  torch.Size([1, 9])   The sentence was encoded into 9 tokens. In case you want to know what the tokens looks like, you can just decode them back:  original_input_tokens = tokenizer.convert_ids_to_tokens(inputs[&quot;input_ids&quot;][0], skip_special_tokens=False) print(&quot;Input tokens: &quot;, original_input_tokens)   Input tokens:  [&#39;&lt;bos&gt;&#39;, &#39;The&#39;, &#39;Ġquick&#39;, &#39;Ġbrown&#39;, &#39;Ġfox&#39;, &#39;Ġjumps&#39;, &#39;Ġover&#39;, &#39;Ġthe&#39;, &#39;Ġlazy&#39;]   As we can see, the tokenizer added the beggining of sentence &lt;bos&gt; token. The ugly Ġ represent spaces.  In the notebook you can find a function clean these up a bit (I find the Ġs are really annoying): original_input_tokens = cleanup_tokens(original_input_tokens) original_input_tokens  [&#39;&lt;bos&gt;&#39;, &#39;The&#39;, &#39; quick&#39;, &#39; brown&#39;, &#39; fox&#39;, &#39; jumps&#39;, &#39; over&#39;, &#39; the&#39;, &#39; lazy&#39;]   Now, let’s feed the input into the model to get the next token prediction along with all the hidden states. Fortunately, the model’s forward method provides an option to return its hidden states.  # we need all the intermediate hidden states with torch.no_grad():     outputs = model(**inputs, output_hidden_states=True)  # # print(outputs.keys()) print(&quot;Logits shape: &quot;, outputs[&quot;logits&quot;].shape)  Logits shape:  torch.Size([1, 9, 51200]) # (batch, sequence len, vocab size)   The logits have been already projected into the vocabulary space. Hidden states on the other hand are still “raw” token representations. We’ll have one hiddent state vector for each model layer.  hidden_states = outputs.hidden_states print(&quot;Number of model layers&quot;, len(hidden_states)) print(&quot;Hidden states for first layer&quot;, hidden_states[0].shape)  Number of model layers:  25 Hidden states for first layer:  torch.Size([1, 9, 2048])   As we see, each layer in the model produces a hidden state. Here the last dimension represents the embedding size (not the vocbulary size).  By applying the language modeling head (or unembedding matrix) to the hidden state at any layer, we can generate ‘early’ logits—predictions from intermediate representations. While the model isn’t explicitly trained to produce meaningful logits at these layers, we’ll see that it naturally starts embedding token-level information along the way.  We can apply the language modeling head like this:  logits_at_second_layer = model.lm_head(hidden_states[2]) print(&quot;Logits at second layer shape: &quot;, logits_at_second_layer.shape)  Logits at second layer shape:  torch.Size([1, 9, 51200])   We now want to access the hidden state at each layer, apply the language modeling head to get the logits, and finally decode the logits into tokens.  for i, hidden_state in enumerate(hidden_states):     # apply the language model head to the hidden states     logits = model.lm_head(hidden_state)      # decode the logits to get the predicted token ids     predicted_token_ids = logits.argmax(-1)      # convert the token ids to tokens     predicted_tokens = tokenizer.convert_ids_to_tokens(predicted_token_ids[0], skip_special_tokens=False)     predicted_tokens = cleanup_tokens(predicted_tokens)      # append the predicted tokens to the list for later     logitlens.append(predicted_tokens)      print(f&quot;Layer {i}: {predicted_tokens}&quot;)   Layer 0: [&#39;-&#39;, &#39; S&#39;, &#39;-&#39;, &#39;-&#39;, &#39;-&#39;, &#39;-&#39;, &#39;-&#39;, &#39; S&#39;, &#39;-&#39;] Layer 1: [&#39;ed&#39;, &#39;oret&#39;, &#39;est&#39;, &#39;ies&#39;, &#39;es&#39;, &#39;uit&#39;, &#39; the&#39;, &#39; same&#39;, &#39; double&#39;] Layer 2: [&#39;import&#39;, &#39;oret&#39;, &#39;est&#39;, &#39;ies&#39;, &#39;es&#39;, &#39;uits&#39;, &#39; time&#39;, &#39; same&#39;, &#39; part&#39;] Layer 3: [&#39;import&#39;, &#39;orem&#39;, &#39;est&#39;, &#39;arf&#39;, &#39;es&#39;, &#39;es&#39;, &#39; all&#39;, &#39; entire&#39;, &#39; man&#39;] Layer 4: [&#39; realise&#39;, &#39;orem&#39;, &#39;est&#39;, &#39;arf&#39;, &#39;es&#39;, &#39;uit&#39;, &#39;worked&#39;, &#39; entire&#39;, &#39; man&#39;] Layer 5: [&#39; realise&#39;, &#39;orem&#39;, &#39;est&#39;, &#39;arf&#39;, &#39;es&#39;, &#39;uit&#39;, &#39;worked&#39;, &#39; entire&#39;, &#39; man&#39;] Layer 6: [&#39; realise&#39;, &#39;orem&#39;, &#39;est&#39;, &#39;arf&#39;, &#39;es&#39;, &#39;uit&#39;, &#39;kill&#39;, &#39;ses&#39;, &#39; man&#39;] Layer 7: [&#39;iveness&#39;, &#39;orem&#39;, &#39;est&#39;, &#39; fox&#39;, &#39;es&#39;, &#39;ers&#39;, &#39; all&#39;, &#39; entire&#39;, &#39; brown&#39;] Layer 8: [&#39;iveness&#39;, &#39;orem&#39;, &#39;ness&#39;, &#39; fox&#39;, &#39;es&#39;, &#39;ers&#39;, &#39;ind&#39;, &#39; entire&#39;, &#39; poor&#39;] Layer 9: [&#39;iveness&#39;, &#39;orem&#39;, &#39;ness&#39;, &#39; fox&#39;, &#39;es&#39;, &#39;ers&#39;, &#39; obstacles&#39;, &#39; entire&#39;, &#39; poor&#39;] Layer 10: [&#39;iveness&#39;, &#39;orem&#39;, &#39;ness&#39;, &#39; ph&#39;, &#39;es&#39;, &#39;ers&#39;, &#39; obstacles&#39;, &#39; entire&#39;, &#39; poor&#39;] Layer 11: [&#39;iveness&#39;, &#39;orem&#39;, &#39; brown&#39;, &#39; fox&#39;, &#39;es&#39;, &#39;ers&#39;, &#39; obstacles&#39;, &#39; entire&#39;, &#39; poor&#39;] Layer 12: [&#39;iveness&#39;, &#39;oret&#39;, &#39; brown&#39;, &#39; fox&#39;, &#39;es&#39;, &#39; into&#39;, &#39; obstacles&#39;, &#39; entire&#39;, &#39; poor&#39;] Layer 13: [&#39;ality&#39;, &#39;oret&#39;, &#39; brown&#39;, &#39; fox&#39;, &#39;es&#39;, &#39; into&#39;, &#39; obstacles&#39;, &#39; entire&#39;, &#39; poor&#39;] Layer 14: [&#39;ality&#39;, &#39;ory&#39;, &#39; brown&#39;, &#39; ph&#39;, &#39;es&#39;, &#39; into&#39;, &#39; obstacles&#39;, &#39; entire&#39;, &#39; poor&#39;] Layer 15: [&#39;iveness&#39;, &#39;ory&#39;, &#39; brown&#39;, &#39; fox&#39;, &#39;es&#39;, &#39; into&#39;, &#39; obstacles&#39;, &#39; entire&#39;, &#39; poor&#39;] Layer 16: [&#39;import&#39;, &#39;ory&#39;, &#39; brown&#39;, &#39; fox&#39;, &#39;es&#39;, &#39; into&#39;, &#39; lazy&#39;, &#39; entire&#39;, &#39; poor&#39;] Layer 17: [&#39;import&#39;, &#39;mes&#39;, &#39; brown&#39;, &#39; fox&#39;, &#39;es&#39;, &#39; over&#39;, &#39; the&#39;, &#39; lazy&#39;, &#39; poor&#39;] Layer 18: [&#39;import&#39;, &#39; first&#39;, &#39; brown&#39;, &#39; fox&#39;, &#39;es&#39;, &#39; over&#39;, &#39; the&#39;, &#39; lazy&#39;, &#39; dog&#39;] Layer 19: [&#39; example&#39;, &#39; first&#39;, &#39; brown&#39;, &#39;Ċ&#39;, &#39;es&#39;, &#39; over&#39;, &#39; the&#39;, &#39; lazy&#39;, &#39; dog&#39;] Layer 20: [&#39;ĊĊ&#39;, &#39; first&#39;, &#39; brown&#39;, &#39;s&#39;, &#39;es&#39;, &#39; over&#39;, &#39; the&#39;, &#39; lazy&#39;, &#39; dog&#39;] Layer 21: [&#39;ing&#39;, &#39; first&#39;, &#39; brown&#39;, &#39; fox&#39;, &#39;es&#39;, &#39; over&#39;, &#39; the&#39;, &#39; lazy&#39;, &#39; dog&#39;] Layer 22: [&#39;Ċ&#39;, &#39; first&#39;, &#39; brown&#39;, &#39;Ċ&#39;, &#39; jumps&#39;, &#39; over&#39;, &#39; the&#39;, &#39; lazy&#39;, &#39; dog&#39;] Layer 23: [&#39;Ċ&#39;, &#39;Ċ&#39;, &#39; brown&#39;, &#39; fox&#39;, &#39; J&#39;, &#39; over&#39;, &#39; the&#39;, &#39; lazy&#39;, &#39; dog&#39;] Layer 24: [&#39;Ċ&#39;, &#39;ory&#39;, &#39; brown&#39;, &#39; fox&#39;, &#39; jumps&#39;, &#39; over&#39;, &#39; the&#39;, &#39; lazy&#39;, &#39; dog&#39;]   As you observe, the predictions refine layer-by-layer, reflecting the model’s gradual understanding of the input. We can visualize the predictions with a heatmap:  # create a heatmap that has a row for each list in the logitlens list import matplotlib.pyplot as plt import seaborn as sns import numpy as np  sns.set_theme(style=&quot;white&quot;)  # just for the bkg color intensities = np.ones((len(hidden_states), len(original_input_tokens)))  # Create heatmap plt.figure(figsize=(20, 10)) ax = sns.heatmap(intensities[::2],                 annot=cleanup_tokens(logitlens)[::2],                 fmt=&#39;&#39;,                 cmap=&#39;Greys&#39;,                 xticklabels=original_input_tokens,                 yticklabels=list(range(len(logitlens)))[::2],                 cbar=False                 ).invert_yaxis()      Right now, our heatmap just displays the model’s top predictions (using argmax), which is fine but a bit flat. Let’s make it more interesting by incorporating model certainty into the visualization.  A good way to quantify the model’s certainity about its output is looking at the entropy of the output distribution. Let’s replace the background color of each cell with the entropy of the model when generating that token.  We’ll calculate the entropy of the output distribution, using it to color the background:  # aux function to compute the entropy from logits def entropy_from_logits(logits):     probs = torch.nn.functional.softmax(logits, dim=-1).clamp(1e-8, 1) #avoid nans     return -torch.sum(probs * torch.log(probs), dim=-1).squeeze()   Now we can run the same code as before, this time we’ll also compute and store the entropies.  logitlens = [] entropies = []  for i, hidden_state in enumerate(hidden_states):     # apply the language model head to the hidden states     logits = model.lm_head(hidden_state)      # get the entropy of the logits     entropy = entropy_from_logits(logits).float().cpu().detach().numpy()      # decode the logits to get the predicted token ids     predicted_token_ids = logits.argmax(-1)      # convert the token ids to tokens     predicted_tokens = tokenizer.convert_ids_to_tokens(predicted_token_ids[0], skip_special_tokens=False)     predicted_tokens = cleanup_tokens(predicted_tokens)      # append the predicted tokens to the list     logitlens.append(predicted_tokens)     entropies.append(entropy)      print(f&quot;Layer {i}: {predicted_tokens}&quot;)   Let’s now create a plot where each cell is colored based on the entropy.  # Create figure and axis plt.figure(figsize=(20, 10))  # Create heatmap ax = sns.heatmap(np.stack(entropies)[::2],                 annot=logitlens[::2],                 fmt=&#39;&#39;,                 cmap=&#39;YlGnBu&#39;,                 xticklabels=original_input_tokens,                 yticklabels=list(range(len(logitlens)))[::2],                 ).invert_yaxis()     Hope you liked this! If you have any suggestions/questios, feel free to drop me a message/email or visit my page or my twitter @devoto_alessio.">
@@ -41,7 +41,7 @@
   
 
 
-<link rel="canonical" href="http://0.0.0.0:4000/LogitLens/">
+<link rel="canonical" href="http://0.0.0.0:4007/LogitLens/">
 
 
 
@@ -49,7 +49,7 @@
 
 
 
-  <meta name="google-site-verification" content="dDLCziuVpFsoWUVXwVC9VDkoCSYjI89nDe59V2KFn-g" />
+  <meta name="google-site-verification" content="5iii_Fx38DkWBFVEAaPAAKMtcsfqDOVG2JXBjhJJUwY" />
 
 
 
@@ -143,7 +143,7 @@
 
   
     <div class="author__avatar">
-      <a href="http://0.0.0.0:4000/">
+      <a href="http://0.0.0.0:4007/">
         <img src="/assets/images/yuzhao-avatar.jpg" alt="" itemprop="image" class="u-photo">
       </a>
     </div>
@@ -151,7 +151,7 @@
 
   <div class="author__content">
     <h3 class="author__name p-name" itemprop="name">
-      <a class="u-url" rel="me" href="http://0.0.0.0:4000/" itemprop="url"></a>
+      <a class="u-url" rel="me" href="http://0.0.0.0:4007/" itemprop="url"></a>
     </h3>
     
       <div class="author__bio p-note" itemprop="description">
@@ -268,7 +268,7 @@
       
         <header>
           <h1 id="page-title" class="page__title" itemprop="headline">
-            <a href="http://0.0.0.0:4000/LogitLens/" itemprop="url">LogitLens from scratch with Hugging Face Transformers
+            <a href="http://0.0.0.0:4007/LogitLens/" itemprop="url">LogitLens from scratch with Hugging Face Transformers
 </a>
           </h1>
           
@@ -511,6 +511,7 @@ We can visualize the predictions with a heatmap:</p>
       
 
       
+
     </div>
 
     
@@ -530,7 +531,9 @@ We can visualize the predictions with a heatmap:</p>
         <!-- start custom footer snippets -->
 
 <!-- end custom footer snippets -->
-        <div class="page__footer-follow">
+        
+
+<div class="page__footer-follow">
   <ul class="social-icons">
     
 
@@ -554,7 +557,8 @@ We can visualize the predictions with a heatmap:</p>
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2024 <a href="http://0.0.0.0:4000">Yu Zhao</a>. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/jekyll-themes/minimal-mistakes/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+<div class="page__footer-copyright">&copy; 2025 <a href="http://0.0.0.0:4007">Yu Zhao</a>. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/jekyll-themes/minimal-mistakes/" rel="nofollow">Minimal Mistakes</a>.</div>
 
       </footer>
     </div>
