@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://yuzhaouoe.github.io</loc>
-    <lastmod>2025-10-06T14:52:29+00:00</lastmod>
+    <loc>http://0.0.0.0:4007</loc>
+    <lastmod>2025-10-06T14:59:16+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   
     
   <url>
-    <loc>https://yuzhaouoe.github.io/404.html</loc>
-    <lastmod>2025-10-06T14:52:29+00:00</lastmod>
+    <loc>http://0.0.0.0:4007/404.html</loc>
+    <lastmod>2025-10-06T14:59:16+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -18,8 +18,8 @@
   
     
   <url>
-    <loc>https://yuzhaouoe.github.io/</loc>
-    <lastmod>2025-10-06T14:52:29+00:00</lastmod>
+    <loc>http://0.0.0.0:4007/</loc>
+    <lastmod>2025-10-06T14:59:16+00:00</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>

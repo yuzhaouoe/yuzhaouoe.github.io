@@ -2,7 +2,7 @@
 layout: single
 classes: wide
 author_profile: true
-title: "Yu Zhao - PhD Student at University of Edinburgh"
+# title: "Yu Zhao - PhD Student at University of Edinburgh"
 excerpt: "Yu Zhao's personal website"
 seo_title: "Yu Zhao - PhD Student at University of Edinburgh | AI Research"
 description: "Yu Zhao is a PhD student at the University of Edinburgh specializing in AI reasoning, perception capabilities, and mechanistic interpretability methods."
