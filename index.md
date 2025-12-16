@@ -15,7 +15,9 @@ twitter_card: "summary"
 
 ---
 
-I am a third-year PhD student at the University of Edinburgh (start from Sept. 2023), a member of [EdinburghNLP](https://edinburghnlp.inf.ed.ac.uk/), supervised by [Pasquale Minervini](https://scholar.google.com/citations?user=9sk6CSgAAAAJ) and [Mirella Lapata](https://scholar.google.com/citations?user=j67B9Q4AAAAJ). I interned at Microsfot Research Cambridge in 2025. 
+I am a third-year PhD student at the University of Edinburgh (start from Sept. 2023), a member of [EdinburghNLP](https://edinburghnlp.inf.ed.ac.uk/), supervised by [Pasquale Minervini](https://scholar.google.com/citations?user=9sk6CSgAAAAJ) and [Mirella Lapata](https://scholar.google.com/citations?user=j67B9Q4AAAAJ). Before my PhD, I studied at Harbin Institute of Technology, Shenzhen, supervised by [Baotian Hu](https://homepage.hit.edu.cn/hubaotian) and [Xiaolong Wang](http://csen.hitsz.edu.cn/info/1021/1876.htm).
+
+I interned at Microsfot Research Cambridge in 2025 summer, working with [Lukas Wutschitz](https://www.microsoft.com/en-us/research/people/luwutsch/).
 
 My research interests include 1) improving reasoning and perception capabilities of AI in open-ended systems; and 2) enhancing efficiency and faithfulness of black-box models by mechanistic interpretability methods.
 
