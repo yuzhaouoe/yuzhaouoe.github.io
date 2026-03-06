@@ -15,7 +15,7 @@ twitter_card: "summary"
 
 ---
 
-I am a third-year PhD student at the University of Edinburgh (start from Sept. 2023), a member of [EdinburghNLP](https://edinburghnlp.inf.ed.ac.uk/), supervised by [Pasquale Minervini](https://scholar.google.com/citations?user=9sk6CSgAAAAJ) and [Mirella Lapata](https://scholar.google.com/citations?user=j67B9Q4AAAAJ). Before my PhD, I studied at Harbin Institute of Technology, Shenzhen, supervised by [Baotian Hu](https://homepage.hit.edu.cn/hubaotian) and [Xiaolong Wang](http://csen.hitsz.edu.cn/info/1021/1876.htm).
+I am a third-year PhD student at the University of Edinburgh, a member of [EdinburghNLP](https://edinburghnlp.inf.ed.ac.uk/), supervised by [Pasquale Minervini](https://scholar.google.com/citations?user=9sk6CSgAAAAJ), [Mirella Lapata](https://scholar.google.com/citations?user=j67B9Q4AAAAJ), and [Fazl Barez](https://fbarez.github.io/). Before my PhD, I was an NLP Algorithm Engineer at Xiaomi AI Lab, working on LLM pre-training and evaluation.
 
 I interned at Microsfot Research Cambridge in 2025 summer, working with [Lukas Wutschitz](https://www.microsoft.com/en-us/research/people/luwutsch/).
 
@@ -87,4 +87,5 @@ MINT @ NeurIPS 2024
 
 <!-- [Q-Filters: Leveraging QK Geometry for Efficient KV Cache Compression](https://arxiv.org/abs/2503.02812)  
 Nathan Godey, Alessio Devoto, **Yu Zhao**, Simone Scardapane, Pasquale Minervini, Éric de la Clergerie, Benoît Sagot  
+
 Preprint 2025 -->
